@@ -34,7 +34,7 @@ Main Entities:
 - External Entities - Clinics & driving schools.  
 
 ER Diagram:  
-//
+https://i.imgur.com/uWKGbZK.jpeg
 --- 
 
 ## Project Structure  
