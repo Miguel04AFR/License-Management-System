@@ -1,5 +1,4 @@
 package visual;
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -8,6 +7,7 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -41,12 +41,15 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import model.Driver;
+import model.Violation;
 import services.DriverService;
+import services.ViolationService;
 
 public class LicenseManagementUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private boolean darkMode = true;
 	private JTable driversTable;
+	private JTable violationsTable;
 
 	public LicenseManagementUI() {
 		initializeUI();
@@ -114,7 +117,23 @@ public class LicenseManagementUI extends JFrame {
 
 		setJMenuBar(menuBar);
 	}
+	private void refreshViolationsTable() {
+	    DefaultTableModel model = (DefaultTableModel) violationsTable.getModel();
+	    model.setRowCount(0);
 
+	    // SUPONIENDO QUE TIENES UN SERVICIO SIMILAR A DriverService
+	    List<Violation> violations = new ViolationService().getAllViolations();
+	    for (Violation violation : violations) {
+	        model.addRow(new Object[]{
+	            violation.getViolationCode(),
+	            violation.getLicenseCode(), // o como corresponda a tu modelo
+	            violation.getViolationType(),
+	            new SimpleDateFormat("yyyy-MM-dd").format(violation.getDate()),
+	            violation.getDeductedPoints(),
+	            violation.isPaid() ? "Paid" : "Pending"
+	        });
+	    }
+	}
 	private JPanel createDashboardPanel() {
 		JPanel dashboardPanel = new JPanel(new BorderLayout(10, 10));
 
@@ -238,6 +257,10 @@ public class LicenseManagementUI extends JFrame {
 
 	private JButton createButton(String text, Icon icon) {
 		JButton button = new JButton(text, icon);
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		button.setFocusable(false);
 		return button;
 	}
@@ -281,7 +304,7 @@ public class LicenseManagementUI extends JFrame {
 
 		// Toolbar with actions
 		JToolBar violationsToolbar = new JToolBar();
-		violationsToolbar.add(createButton("Register Violation", UIManager.getIcon("OptionPane.errorIcon")));
+		violationsToolbar.add(new NewViolationButton(this, this::refreshViolationsTable));
 		violationsToolbar.add(createButton("Mark as Paid", UIManager.getIcon("FileView.floppyDriveIcon")));
 
 		// Filters
