@@ -156,11 +156,13 @@ public class Validation {
 			valido = false; // Siglo XX y mayor que 100 años.
 		}
 
-        if (siglo >= 0 && siglo <= 5) {
-        annoCompleto = 1900 + anno;
-    } else if (siglo >= 6 && siglo <= 8) {
-        annoCompleto = 2000 + anno;
+	    if(valido){
+        if (compSiglo >= 0 && compSiglo <= 5) {
+        annoCompleto = 1900 + compAnno;
+    } else if (compSiglo >= 6 && compSiglo <= 8) {
+        annoCompleto = 2000 + compAnno;
     }
+	    }
 
 		String mes = cadena.substring(2, 4);
 		int compMes = Integer.parseInt(mes);
@@ -186,12 +188,12 @@ public class Validation {
 		}
 
 		// Año bisiesto y validación de febrero
-    if (mes == 2) {
+    if (compMes == 2 && valido) {
         boolean bisiesto = (annoCompleto % 4 == 0 && (annoCompleto % 100 != 0 || annoCompleto % 400 == 0));
-        if (bisiesto && dia > 29){
+        if (bisiesto && compDia > 29){
  			valido = false;
 		}
-        if (!bisiesto && dia > 28){
+        if (!bisiesto && compDia > 28){
 			valido = false;
     	}
     }
