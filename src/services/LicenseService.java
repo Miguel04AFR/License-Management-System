@@ -1,0 +1,183 @@
+package services;
+
+import model.License;
+import utils.ConnectionManager;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LicenseService {
+
+    // Create
+    public boolean createLicense(License license) {
+        String sql = "INSERT INTO license (license_code, license_type, issue_date, expiration_date, "
+                   + "vehicle_category, restrictions, is_renewed, driver_id) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            setLicenseParameters(pstmt, license);
+            return pstmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            handleSQLException("Error creating license", e);
+            return false;
+        }
+    }
+
+    // Read All
+    public List<License> getAllLicenses() {
+        List<License> licenses = new ArrayList<>();
+        String sql = "SELECT * FROM license";
+        
+        try (Connection conn = ConnectionManager.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            while (rs.next()) {
+                licenses.add(mapResultSetToLicense(rs));
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error retrieving licenses", e);
+        }
+        return licenses;
+    }
+
+    // Read Single
+    public License getLicenseByCode(String licenseCode) {
+        String sql = "SELECT * FROM license WHERE license_code = ?";
+        License license = new License();
+        
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, licenseCode);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    license = mapResultSetToLicense(rs);
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error retrieving license", e);
+        }
+        return license;
+    }
+
+    // Update
+    public boolean updateLicense(License license) {
+        String sql = "UPDATE license SET "
+                   + "license_type = ?, issue_date = ?, expiration_date = ?, "
+                   + "vehicle_category = ?, restrictions = ?, is_renewed = ?, driver_id = ? "
+                   + "WHERE license_code = ?";
+        
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            setUpdateParameters(pstmt, license);
+            pstmt.setString(8, license.getLicenseCode());
+            
+            return pstmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            handleSQLException("Error updating license", e);
+            return false;
+        }
+    }
+
+    // Delete
+    public boolean deleteLicense(String licenseCode) {
+        String sql = "DELETE FROM license WHERE license_code = ?";
+        
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, licenseCode);
+            return pstmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            handleSQLException("Error deleting license", e);
+            return false;
+        }
+    }
+
+    // Métodos auxiliares
+    private void setLicenseParameters(PreparedStatement pstmt, License license) throws SQLException {
+        pstmt.setString(1, license.getLicenseCode());
+        pstmt.setString(2, license.getLicenseType());
+        pstmt.setDate(3, new java.sql.Date(license.getIssueDate().getTime()));
+        pstmt.setDate(4, new java.sql.Date(license.getExpirationDate().getTime()));
+        pstmt.setString(5, license.getVehicleCategory());
+        pstmt.setString(6, license.getRestrictions());
+        pstmt.setBoolean(7, license.isRenewed());
+        pstmt.setString(8, license.getDriverId());
+    }
+
+    private void setUpdateParameters(PreparedStatement pstmt, License license) throws SQLException {
+        pstmt.setString(1, license.getLicenseType());
+        pstmt.setDate(2, new java.sql.Date(license.getIssueDate().getTime()));
+        pstmt.setDate(3, new java.sql.Date(license.getExpirationDate().getTime()));
+        pstmt.setString(4, license.getVehicleCategory());
+        pstmt.setString(5, license.getRestrictions());
+        pstmt.setBoolean(6, license.isRenewed());
+        pstmt.setString(7, license.getDriverId());
+    }
+
+    private License mapResultSetToLicense(ResultSet rs) throws SQLException {
+        License license = new License();
+        license.setLicenseCode(rs.getString("license_code"));
+        license.setLicenseType(rs.getString("license_type"));
+        license.setIssueDate(rs.getDate("issue_date"));
+        license.setExpirationDate(rs.getDate("expiration_date"));
+        license.setVehicleCategory(rs.getString("vehicle_category"));
+        license.setRestrictions(rs.getString("restrictions"));
+        license.setRenewed(rs.getBoolean("is_renewed"));
+        license.setDriverId(rs.getString("driver_id"));
+        return license;
+    }
+
+    private void handleSQLException(String message, SQLException e) {
+        System.err.println(message + ": " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    // Método adicional para licencias por conductor
+    public List<License> getLicensesByDriver(String driverId) {
+        List<License> licenses = new ArrayList<>();
+        String sql = "SELECT * FROM license WHERE driver_id = ?";
+        
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, driverId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    licenses.add(mapResultSetToLicense(rs));
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error retrieving licenses by driver", e);
+        }
+        return licenses;
+    }
+
+    // Método para licencias próximas a expirar
+    public List<License> getExpiringLicenses(int daysThreshold) {
+        List<License> licenses = new ArrayList<>();
+        String sql = "SELECT * FROM license WHERE expiration_date BETWEEN CURRENT_DATE AND CURRENT_DATE + ?";
+        
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, daysThreshold);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    licenses.add(mapResultSetToLicense(rs));
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error retrieving expiring licenses", e);
+        }
+        return licenses;
+    }
+}
