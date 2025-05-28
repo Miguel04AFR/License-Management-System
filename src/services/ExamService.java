@@ -1,15 +1,20 @@
 package services;
 
-import model.Exam;
-import utils.ConnectionManager;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExamService {
+import model.Exam;
+import utils.ConnectionManager;
+
+public class ExamService  implements EntityService<Exam> {
 
     // Create
-    public boolean createExam(Exam exam) {
+    public boolean create(Exam exam) {
         String sql = "INSERT INTO exam (exam_code, exam_type, exam_date, result, examiner_name, entity_code, driver_id) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         
@@ -26,7 +31,7 @@ public class ExamService {
     }
 
     // Read All
-    public List<Exam> getAllExams() {
+    public List<Exam> getAll() {
         List<Exam> exams = new ArrayList<>();
         String sql = "SELECT * FROM exam";
         
@@ -44,7 +49,7 @@ public class ExamService {
     }
 
     // Read Single
-    public Exam getExamByCode(String examCode) {
+    public Exam getById(String examCode) {
         String sql = "SELECT * FROM exam WHERE exam_code = ?";
         Exam exam = new Exam();
         
@@ -64,7 +69,7 @@ public class ExamService {
     }
 
     // Update
-    public boolean updateExam(Exam exam) {
+    public boolean update(Exam exam) {
         String sql = "UPDATE exam SET "
                    + "exam_type = ?, exam_date = ?, result = ?, examiner_name = ?, "
                    + "entity_code = ?, driver_id = ? "
@@ -85,7 +90,7 @@ public class ExamService {
     }
 
     // Delete
-    public boolean deleteExam(String examCode) {
+    public boolean delete(String examCode) {
         String sql = "DELETE FROM exam WHERE exam_code = ?";
         
         try (Connection conn = ConnectionManager.getConnection();

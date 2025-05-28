@@ -1,15 +1,20 @@
 package services;
 
-import model.License;
-import utils.ConnectionManager;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LicenseService {
+import model.License;
+import utils.ConnectionManager;
+
+public class LicenseService implements EntityService<License> {
 
     // Create
-    public boolean createLicense(License license) {
+    public boolean create(License license)  {
         String sql = "INSERT INTO license (license_code, license_type, issue_date, expiration_date, "
                    + "vehicle_category, restrictions, is_renewed, driver_id) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -27,7 +32,7 @@ public class LicenseService {
     }
 
     // Read All
-    public List<License> getAllLicenses() {
+    public List<License> getAll() {
         List<License> licenses = new ArrayList<>();
         String sql = "SELECT * FROM license";
         
@@ -45,7 +50,7 @@ public class LicenseService {
     }
 
     // Read Single
-    public License getLicenseByCode(String licenseCode) {
+    public License getById(String licenseCode) {
         String sql = "SELECT * FROM license WHERE license_code = ?";
         License license = new License();
         
@@ -65,7 +70,7 @@ public class LicenseService {
     }
 
     // Update
-    public boolean updateLicense(License license) {
+    public boolean update(License license) {
         String sql = "UPDATE license SET "
                    + "license_type = ?, issue_date = ?, expiration_date = ?, "
                    + "vehicle_category = ?, restrictions = ?, is_renewed = ?, driver_id = ? "
@@ -86,7 +91,7 @@ public class LicenseService {
     }
 
     // Delete
-    public boolean deleteLicense(String licenseCode) {
+    public boolean delete(String licenseCode) {
         String sql = "DELETE FROM license WHERE license_code = ?";
         
         try (Connection conn = ConnectionManager.getConnection();

@@ -11,12 +11,12 @@ import java.util.List;
 import model.Driver;
 import utils.ConnectionManager;
 
-public class DriverService {
+public class DriverService implements EntityService<Driver>{
 
     // Create (Incluye driver_id)
-    public boolean createDriver(Driver driver) {
-        String sql = "INSERT INTO driver (driver_id, first_name, last_name, birth_date, address, phone_number, email, license_status) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public boolean create(Driver driver) {
+    	String sql = "INSERT INTO driver (driver_id, first_name, last_name, birth_date, address, phone_number, email, license_status) "
+    	           + "VALUES (?, ?, ?, ?, ?, ?, ?, ?::license_status)";
         
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -31,7 +31,7 @@ public class DriverService {
     }
 
     // Read All
-    public List<Driver> getAllDrivers() {
+    public List<Driver> getAll() {
         List<Driver> drivers = new ArrayList<>();
         String sql = "SELECT * FROM driver";
         
@@ -49,7 +49,7 @@ public class DriverService {
     }
 
     // Read Single
-    public Driver getDriverById(String driverId) {
+    public Driver getById(String driverId) {
         String sql = "SELECT * FROM driver WHERE driver_id = ?";
         Driver driver = new Driver();
         
@@ -69,28 +69,29 @@ public class DriverService {
     }
 
     // Update
-    public boolean updateDriver(Driver driver) {
+    public boolean update(Driver driver) {
         String sql = "UPDATE driver SET "
                    + "first_name = ?, last_name = ?, birth_date = ?, address = ?, "
-                   + "phone_number = ?, email = ?, license_status = ? "
+                   + "phone_number = ?, email = ?, license_status = CAST(? AS license_status) "
                    + "WHERE driver_id = ?";
-        
+
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            setUpdateParameters(pstmt, driver);
-            pstmt.setString(8, driver.getDriverId());
-            
-            return pstmt.executeUpdate() > 0;
-            
+
+           
+        	setUpdateParameters(pstmt,driver);
+            int affectedRows = pstmt.executeUpdate();
+            System.out.println("UPDATE driver_id = '" + driver.getDriverId() + "', filas afectadas: " + affectedRows);
+            return affectedRows > 0;
+
         } catch (SQLException e) {
-            handleSQLException("Error updating driver", e);
+            e.printStackTrace();
             return false;
         }
     }
 
     // Delete
-    public boolean deleteDriver(String driverId) {
+    public boolean delete(String driverId) {
         String sql = "DELETE FROM driver WHERE driver_id = ?";
         
         try (Connection conn = ConnectionManager.getConnection();
@@ -118,13 +119,14 @@ public class DriverService {
     }
 
     private void setUpdateParameters(PreparedStatement pstmt, Driver driver) throws SQLException {
-        pstmt.setString(1, driver.getFirstName());
-        pstmt.setString(2, driver.getLastName());
-        pstmt.setDate(3, new java.sql.Date(driver.getBirthDate().getTime()));
-        pstmt.setString(4, driver.getAddress());
-        pstmt.setString(5, driver.getPhoneNumber());
-        pstmt.setString(6, driver.getEmail());
-        pstmt.setString(7, driver.getLicenseStatus());
+    	 pstmt.setString(1, driver.getFirstName());
+         pstmt.setString(2, driver.getLastName());
+         pstmt.setDate(3, new java.sql.Date(driver.getBirthDate().getTime()));
+         pstmt.setString(4, driver.getAddress());
+         pstmt.setString(5, driver.getPhoneNumber());
+         pstmt.setString(6, driver.getEmail());
+         pstmt.setString(7, driver.getLicenseStatus());
+         pstmt.setString(8, driver.getDriverId());
     }
 
     private Driver mapResultSetToDriver(ResultSet rs) throws SQLException {

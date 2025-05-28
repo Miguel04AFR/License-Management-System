@@ -159,7 +159,7 @@ public class NewViolationButton extends AbstractAddButton {
         violation.setLicenseCode(txtLicenseCode.getText().trim());
 
         ViolationService service = new ViolationService();
-        if (!service.createViolation(violation)) {
+        if (!service.create(violation)) {
             JOptionPane.showMessageDialog(parentFrame,
                     "Error saving violation to database",
                     "Database Error",

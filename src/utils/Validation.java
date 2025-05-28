@@ -120,4 +120,87 @@ public class Validation {
         }
         return showErrors(parent, allErrors);
     }
+
+    //Validar id del conductor como el carnet cubano
+    public static ArrayList<String>  validateID(String cadena) {
+    	ArrayList<String> errors = new ArrayList<>();
+		int lengthText = cadena.length();
+		boolean validate = true;
+
+		if (lengthText != 11) {
+			validate = false;
+		}
+
+		int i = 0;
+		while (i < lengthText && validate) {
+			if (!Character.isDigit(cadena.charAt(i))) {
+				validate = false;
+			}
+			i++;
+		}
+
+		String century = cadena.substring(7, 8);
+		int compCentury = Integer.parseInt(century);
+
+		if (compCentury == 9 && validate) {
+			validate = false; // Siglo XIX
+		}
+
+		String year = cadena.substring(0, 2);
+		int compYear = Integer.parseInt(year);
+        int yearComplete=0;
+		if (validate && ((compCentury >= 6 && compCentury < 9) && compYear > 25)) {
+			validate = false; // Siglo XXI y año mayor que el actual (inválido).
+		}
+
+		if (validate && ((compCentury >= 0 && compCentury < 6) && compYear < 25)) {
+			validate = false; // Siglo XX y mayor que 100 años.
+		}
+
+	    if(validate){
+        if (compCentury >= 0 && compCentury <= 5) {
+        	yearComplete = 1900 + compYear;
+    } else if (compCentury >= 6 && compCentury <= 8) {
+    	yearComplete = 2000 + compYear;
+    }
+	    }
+
+		String month = cadena.substring(2, 4);
+		int compMonth = Integer.parseInt(month);
+
+		if (compMonth < 1 || compMonth > 12) {
+			validate = false; // Solo 12 meses.
+		}
+
+		String day = cadena.substring(4, 6);
+		int compDay = Integer.parseInt(day);
+
+		if (validate && compDay < 1) {
+			validate = false;
+		}
+		if (validate && compDay > 31) {
+			validate = false;
+		}
+		if (validate && ((compMonth < 8 && compMonth != 2 && compMonth % 2 == 0) && compDay > 30)) {
+			validate = false;
+		}
+		if (validate && ((compMonth > 7 && compMonth != 2 && compMonth % 2 != 0) && compDay > 30)) {
+			validate = false;
+		}
+
+		// Año bisiesto y validación de febrero
+    if (compMonth == 2 && validate) {
+        boolean bisiesto = (yearComplete % 4 == 0 && (yearComplete % 100 != 0 || yearComplete % 400 == 0));
+        if (bisiesto && compDay > 29){
+        	validate = false;
+		}
+        if (!bisiesto && compDay > 28){
+        	validate = false;
+    	}
+    }
+    if(!validate)
+    	errors.add("ID  Invalid");
+		return errors;
+}
+        
 }

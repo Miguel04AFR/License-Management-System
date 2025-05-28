@@ -40,7 +40,7 @@ public class NewDriverButton extends AbstractAddButton {
     public NewDriverButton(JFrame parent, Runnable refreshCallback) {
         super("New Driver", parent, refreshCallback);
     }
-
+    
     @Override
     protected void showFormDialog() {
         JDialog dialog = new JDialog(parentFrame, "New Driver", true);
@@ -82,10 +82,10 @@ public class NewDriverButton extends AbstractAddButton {
         txtPhone = new JTextField();
         txtEmail = new JTextField();
         txtAddress = new JTextField();
-        cmbStatus = new JComboBox<>(new String[]{"Vigente", "Vencida", "Suspendida"});
+        cmbStatus = new JComboBox<>(new String[]{"Active", "Expired", "Suspended","Revoked","In Process"});
 
         datePicker.setFormats("yyyy-MM-dd");
-        txtDriverId.setToolTipText("Format: DRV-0000");
+        txtDriverId.setToolTipText("");
     }
 
     private JPanel createButtonPanel(JDialog dialog) {
@@ -112,13 +112,9 @@ public class NewDriverButton extends AbstractAddButton {
 
     protected boolean validateForm() {
         ArrayList<String> errors = new ArrayList<>();
-        
+       
         // Validar ID del conductor
-        errors.addAll(Validation.validateRequired(txtDriverId.getText(), "ID del conductor"));
-        errors.addAll(Validation.validateFormat(txtDriverId.getText().trim(), 
-                       "^DRV-\\d{4}$", 
-                       "Formato de ID inválido (DRV-0000)"));
-        
+       errors.addAll(Validation.validateID(txtDriverId.getText()));        
         // Validar nombres
         errors.addAll(Validation.validateRequired(txtFirstName.getText(), "Nombre"));
         errors.addAll(Validation.validateRequired(txtLastName.getText(), "Apellido"));
@@ -147,20 +143,20 @@ public class NewDriverButton extends AbstractAddButton {
         driver.setFirstName(txtFirstName.getText().trim());
         driver.setLastName(txtLastName.getText().trim());
         driver.setBirthDate(datePicker.getDate());
-        driver.setPhoneNumber(txtPhone.getText().trim());
-        driver.setEmail(txtEmail.getText().trim());
         driver.setAddress(txtAddress.getText().trim());
+        driver.setPhoneNumber(txtPhone.getText().trim());
+        driver.setEmail(txtEmail.getText().trim());     
         driver.setLicenseStatus(cmbStatus.getSelectedItem().toString());
 
         DriverService service = new DriverService();
-        if(!service.createDriver(driver)) {
+        if(!service.create(driver)) {
             JOptionPane.showMessageDialog(parentFrame,
                 "Error saving driver to database",
                 "Database Error",
                 JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
     private void addFormField(JPanel panel, String label, JComponent component) {
         JLabel lbl = new JLabel(label);
         lbl.setFont(lbl.getFont().deriveFont(Font.BOLD));
