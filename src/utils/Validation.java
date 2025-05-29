@@ -122,82 +122,85 @@ public class Validation {
     }
 
     //Validar id del conductor como el carnet cubano
-    public static boolean validarCarnet(String cadena) {
-		int longitud = cadena.length();
-		boolean valido = true;
+    public static ArrayList<String>  validateID(String cadena) {
+    	ArrayList<String> errors = new ArrayList<>();
+		int lengthText = cadena.length();
+		boolean validate = true;
 
-		if (longitud != 11) {
-			valido = false;
+		if (lengthText != 11) {
+			validate = false;
 		}
 
 		int i = 0;
-		while (i < longitud && valido) {
+		while (i < lengthText && validate) {
 			if (!Character.isDigit(cadena.charAt(i))) {
-				valido = false;
+				validate = false;
 			}
 			i++;
 		}
 
-		String siglo = cadena.substring(7, 8);
-		int compSiglo = Integer.parseInt(siglo);
+		String century = cadena.substring(7, 8);
+		int compCentury = Integer.parseInt(century);
 
-		if (compSiglo == 9 && valido) {
-			valido = false; // Siglo XIX
+		if (compCentury == 9 && validate) {
+			validate = false; // Siglo XIX
 		}
 
-		String anno = cadena.substring(0, 2);
-		int compAnno = Integer.parseInt(anno);
-        int annoCompleto;
-		if (valido && ((compSiglo >= 6 && compSiglo < 9) && compAnno > 25)) {
-			valido = false; // Siglo XXI y año mayor que el actual (inválido).
+		String year = cadena.substring(0, 2);
+		int compYear = Integer.parseInt(year);
+        int yearComplete=0;
+		if (validate && ((compCentury >= 6 && compCentury < 9) && compYear > 25)) {
+			validate = false; // Siglo XXI y año mayor que el actual (inválido).
 		}
 
-		if (valido && ((compSiglo >= 0 && compSiglo < 6) && compAnno < 25)) {
-			valido = false; // Siglo XX y mayor que 100 años.
+		if (validate && ((compCentury >= 0 && compCentury < 6) && compYear < 25)) {
+			validate = false; // Siglo XX y mayor que 100 años.
 		}
 
-	    if(valido){
-        if (compSiglo >= 0 && compSiglo <= 5) {
-        annoCompleto = 1900 + compAnno;
-    } else if (compSiglo >= 6 && compSiglo <= 8) {
-        annoCompleto = 2000 + compAnno;
+	    if(validate){
+        if (compCentury >= 0 && compCentury <= 5) {
+        	yearComplete = 1900 + compYear;
+    } else if (compCentury >= 6 && compCentury <= 8) {
+    	yearComplete = 2000 + compYear;
     }
 	    }
 
-		String mes = cadena.substring(2, 4);
-		int compMes = Integer.parseInt(mes);
+		String month = cadena.substring(2, 4);
+		int compMonth = Integer.parseInt(month);
 
-		if (compMes < 1 || compMes > 12) {
-			valido = false; // Solo 12 meses.
+		if (compMonth < 1 || compMonth > 12) {
+			validate = false; // Solo 12 meses.
 		}
 
-		String dia = cadena.substring(4, 6);
-		int compDia = Integer.parseInt(dia);
+		String day = cadena.substring(4, 6);
+		int compDay = Integer.parseInt(day);
 
-		if (valido && compDia < 1) {
-			valido = false;
+		if (validate && compDay < 1) {
+			validate = false;
 		}
-		if (valido && compDia > 31) {
-			valido = false;
+		if (validate && compDay > 31) {
+			validate = false;
 		}
-		if (valido && ((compMes < 8 && compMes != 2 && compMes % 2 == 0) && compDia > 30)) {
-			valido = false;
+		if (validate && ((compMonth < 8 && compMonth != 2 && compMonth % 2 == 0) && compDay > 30)) {
+			validate = false;
 		}
-		if (valido && ((compMes > 7 && compMes != 2 && compMes % 2 != 0) && compDia > 30)) {
-			valido = false;
+		if (validate && ((compMonth > 7 && compMonth != 2 && compMonth % 2 != 0) && compDay > 30)) {
+			validate = false;
 		}
 
 		// Año bisiesto y validación de febrero
-    if (compMes == 2 && valido) {
-        boolean bisiesto = (annoCompleto % 4 == 0 && (annoCompleto % 100 != 0 || annoCompleto % 400 == 0));
-        if (bisiesto && compDia > 29){
- 			valido = false;
+    if (compMonth == 2 && validate) {
+        boolean bisiesto = (yearComplete % 4 == 0 && (yearComplete % 100 != 0 || yearComplete % 400 == 0));
+        if (bisiesto && compDay > 29){
+        	validate = false;
 		}
-        if (!bisiesto && compDia > 28){
-			valido = false;
+        if (!bisiesto && compDay > 28){
+        	validate = false;
     	}
     }
-		return valido;
+    if(!validate)
+    	errors.add("ID  Invalid");
+		return errors;
 }
         
 }

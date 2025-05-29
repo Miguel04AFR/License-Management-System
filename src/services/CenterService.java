@@ -1,15 +1,20 @@
 package services;
 
-import model.Center;
-import utils.ConnectionManager;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CenterService {
+import model.Center;
+import utils.ConnectionManager;
+
+public class CenterService  implements EntityService<Center>{
 
     // Create
-    public boolean createCenter(Center center) {
+    public boolean create(Center center) {
         String sql = "INSERT INTO center (center_code, center_name, postal_address, phone_number, "
                    + "general_director, hr_manager, accounting_manager, union_secretary, logo, contact_email) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -28,7 +33,7 @@ public class CenterService {
     }
 
     // Read All
-    public List<Center> getAllCenters() {
+    public List<Center> getAll() {
         List<Center> centers = new ArrayList<>();
         String sql = "SELECT * FROM center";
         
@@ -46,7 +51,7 @@ public class CenterService {
     }
 
     // Read Single
-    public Center getCenterByCode(String centerCode) {
+    public Center getById(String centerCode) {
         String sql = "SELECT * FROM center WHERE center_code = ?";
         Center center = new Center();
         
@@ -66,7 +71,7 @@ public class CenterService {
     }
 
     // Update
-    public boolean updateCenter(Center center) {
+    public boolean update(Center center) {
         String sql = "UPDATE center SET "
                    + "center_name = ?, postal_address = ?, phone_number = ?, general_director = ?, "
                    + "hr_manager = ?, accounting_manager = ?, union_secretary = ?, logo = ?, contact_email = ? "
@@ -87,7 +92,7 @@ public class CenterService {
     }
 
     // Delete
-    public boolean deleteCenter(String centerCode) {
+    public boolean delete(String centerCode) {
         String sql = "DELETE FROM center WHERE center_code = ?";
         
         try (Connection conn = ConnectionManager.getConnection();

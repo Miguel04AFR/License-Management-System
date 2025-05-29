@@ -1,16 +1,21 @@
 package services;
 
 
-import model.AssociatedEntity;
-import utils.ConnectionManager;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AssociatedEntityService {
+import model.AssociatedEntity;
+import utils.ConnectionManager;
+
+public class AssociatedEntityService implements EntityService<AssociatedEntity>{
 
     // Create
-    public boolean createAssociatedEntity(AssociatedEntity entity) {
+    public boolean create(AssociatedEntity entity) {
         String sql = "INSERT INTO associated_entity (entity_code, entity_name, entity_type, address, "
                    + "phone_number, contact_email, director_name, center_code) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -28,7 +33,7 @@ public class AssociatedEntityService {
     }
 
     // Read All
-    public List<AssociatedEntity> getAllAssociatedEntities() {
+    public List<AssociatedEntity> getAll() {
         List<AssociatedEntity> entities = new ArrayList<>();
         String sql = "SELECT * FROM associated_entity";
         
@@ -46,7 +51,7 @@ public class AssociatedEntityService {
     }
 
     // Read Single
-    public AssociatedEntity getEntityByCode(String entityCode) {
+    public AssociatedEntity getById(String entityCode) {
         String sql = "SELECT * FROM associated_entity WHERE entity_code = ?";
         AssociatedEntity entity = new AssociatedEntity();
         
@@ -66,7 +71,7 @@ public class AssociatedEntityService {
     }
 
     // Update
-    public boolean updateAssociatedEntity(AssociatedEntity entity) {
+    public boolean update(AssociatedEntity entity) {
         String sql = "UPDATE associated_entity SET "
                    + "entity_name = ?, entity_type = ?, address = ?, phone_number = ?, "
                    + "contact_email = ?, director_name = ?, center_code = ? "
@@ -87,7 +92,7 @@ public class AssociatedEntityService {
     }
 
     // Delete
-    public boolean deleteAssociatedEntity(String entityCode) {
+    public boolean delete(String entityCode) {
         String sql = "DELETE FROM associated_entity WHERE entity_code = ?";
         
         try (Connection conn = ConnectionManager.getConnection();

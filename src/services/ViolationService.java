@@ -11,10 +11,10 @@ import java.util.List;
 import model.Violation;
 import utils.ConnectionManager;
 
-public class ViolationService {
+public class ViolationService implements EntityService<Violation>{
 
     // Create
-    public boolean createViolation(Violation violation) {
+    public boolean create(Violation violation) {
         String sql = "INSERT INTO violation (violation_code, violation_type, violation_date, "
                    + "location, description, deducted_points, is_paid, license_code) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -32,7 +32,7 @@ public class ViolationService {
     }
 
     // Read All
-    public List<Violation> getAllViolations() {
+    public List<Violation> getAll() {
         List<Violation> violations = new ArrayList<>();
         String sql = "SELECT * FROM violation";
         
@@ -50,7 +50,7 @@ public class ViolationService {
     }
 
     // Read Single
-    public Violation getViolationByCode(String violationCode) {
+    public Violation getById(String violationCode) {
         String sql = "SELECT * FROM violation WHERE violation_code = ?";
         Violation violation = new Violation();
         
@@ -70,7 +70,7 @@ public class ViolationService {
     }
 
     // Update
-    public boolean updateViolation(Violation violation) {
+    public boolean update(Violation violation) {
         String sql = "UPDATE violation SET "
                    + "violation_type = ?, violation_date = ?, location = ?, "
                    + "description = ?, deducted_points = ?, is_paid = ?, license_code = ? "
@@ -91,7 +91,7 @@ public class ViolationService {
     }
 
     // Delete
-    public boolean deleteViolation(String violationCode) {
+    public boolean delete(String violationCode) {
         String sql = "DELETE FROM violation WHERE violation_code = ?";
         
         try (Connection conn = ConnectionManager.getConnection();

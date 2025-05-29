@@ -4,7 +4,7 @@ import services.DriverService;
 import utils.ConnectionManager;
 
 public class Main {
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         DriverService driverService = new DriverService();
         String targetDriverId = "RFC-MART-850101";
 
@@ -20,6 +20,6 @@ public class Main {
             System.out.println("⚠️ No se encontró ningún conductor con ID: " + targetDriverId);
         }
 
-        ConnectionManager.closeConnection();
-    }
+      
+    }*/
 }
