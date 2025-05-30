@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -35,7 +35,7 @@ public class NewDriverButton extends AbstractAddButton {
     private JTextField txtPhone;
     private JTextField txtEmail;
     private JTextField txtAddress;
-    private JComboBox<String> cmbStatus;
+    
 
     public NewDriverButton(JFrame parent, Runnable refreshCallback) {
         super("New Driver", parent, refreshCallback);
@@ -69,7 +69,7 @@ public class NewDriverButton extends AbstractAddButton {
         addFormField(panel, "Phone*:", txtPhone);
         addFormField(panel, "Email:", txtEmail);
         addFormField(panel, "Address:", txtAddress);
-        addFormField(panel, "License Status*:", cmbStatus);
+     
 
         return panel;
     }
@@ -82,8 +82,6 @@ public class NewDriverButton extends AbstractAddButton {
         txtPhone = new JTextField();
         txtEmail = new JTextField();
         txtAddress = new JTextField();
-        cmbStatus = new JComboBox<>(new String[]{"Active", "Expired", "Suspended","Revoked","In Process"});
-
         datePicker.setFormats("yyyy-MM-dd");
         txtDriverId.setToolTipText("");
     }
@@ -131,7 +129,7 @@ public class NewDriverButton extends AbstractAddButton {
         errors.addAll(Validation.validateEmail(txtEmail.getText().trim()));
         
         // Validar combo box
-        errors.addAll(Validation.validateSelection(cmbStatus, "Estado de licencia"));
+       
         
         return Validation.showErrors(this, errors);
     }
@@ -146,7 +144,7 @@ public class NewDriverButton extends AbstractAddButton {
         driver.setAddress(txtAddress.getText().trim());
         driver.setPhoneNumber(txtPhone.getText().trim());
         driver.setEmail(txtEmail.getText().trim());     
-        driver.setLicenseStatus(cmbStatus.getSelectedItem().toString());
+        driver.setLicenseStatus("In Process");
 
         DriverService service = new DriverService();
         if(!service.create(driver)) {

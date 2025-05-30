@@ -1,9 +1,8 @@
 package utils;
 
 import java.awt.Component;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JComboBox;
@@ -38,12 +37,11 @@ public class Validation {
             return errors;
         }
 
-        LocalDate birthDate = date.toInstant()
-                               .atZone(ZoneId.systemDefault())
-                               .toLocalDate();
-        LocalDate minDate = LocalDate.now().minusYears(minAge);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -minAge);
+        Date minDate = cal.getTime();
 
-        if (birthDate.isAfter(minDate)) {
+        if (date.after(minDate)) {
             errors.add("Debe tener al menos " + minAge + " años");
         }
         return errors;
@@ -113,6 +111,7 @@ public class Validation {
     }
 
     // Validación combinada
+    @SafeVarargs
     public static boolean validateAll(JComponent parent, ArrayList<String>... validationResults) {
         ArrayList<String> allErrors = new ArrayList<>();
         for (ArrayList<String> result : validationResults) {
@@ -122,85 +121,63 @@ public class Validation {
     }
 
     //Validar id del conductor como el carnet cubano
-    public static ArrayList<String>  validateID(String cadena) {
-    	ArrayList<String> errors = new ArrayList<>();
-		int lengthText = cadena.length();
-		boolean validate = true;
+    public static ArrayList<String> validateID(String id) {
+        ArrayList<String> errors = new ArrayList<>();
 
-		if (lengthText != 11) {
-			validate = false;
-		}
+        if (id == null || id.length() != 11) {
+            errors.add("The ID must have exactly 11 digits.");
+        }
+        if (id != null && !id.matches("\\d{11}")) {
+            errors.add("The ID must contain only numbers.");
+        }
+        // Prevent substring errors if previous checks failed
+        if (!errors.isEmpty()) {
+            return errors;
+        }
 
-		int i = 0;
-		while (i < lengthText && validate) {
-			if (!Character.isDigit(cadena.charAt(i))) {
-				validate = false;
-			}
-			i++;
-		}
+        int centuryDigit = Integer.parseInt(id.substring(7, 8));
+        int year = Integer.parseInt(id.substring(0, 2));
+        int month = Integer.parseInt(id.substring(2, 4));
+        int day = Integer.parseInt(id.substring(4, 6));
+        int fullYear = 0;
 
-		String century = cadena.substring(7, 8);
-		int compCentury = Integer.parseInt(century);
-
-		if (compCentury == 9 && validate) {
-			validate = false; // Siglo XIX
-		}
-
-		String year = cadena.substring(0, 2);
-		int compYear = Integer.parseInt(year);
-        int yearComplete=0;
-		if (validate && ((compCentury >= 6 && compCentury < 9) && compYear > 25)) {
-			validate = false; // Siglo XXI y año mayor que el actual (inválido).
-		}
-
-		if (validate && ((compCentury >= 0 && compCentury < 6) && compYear < 25)) {
-			validate = false; // Siglo XX y mayor que 100 años.
-		}
-
-	    if(validate){
-        if (compCentury >= 0 && compCentury <= 5) {
-        	yearComplete = 1900 + compYear;
-    } else if (compCentury >= 6 && compCentury <= 8) {
-    	yearComplete = 2000 + compYear;
+        if (centuryDigit == 9) {
+            errors.add("IDs from the 19th century are not valid.");
+        }
+        if (centuryDigit >= 0 && centuryDigit <= 5) {
+            fullYear = 1900 + year;
+            if (year < 25) {
+                errors.add("Invalid year for the 20th century.");
+            }
+        } else if (centuryDigit >= 6 && centuryDigit <= 8) {
+            fullYear = 2000 + year;
+            if (year > 25) {
+                errors.add("Invalid year for the 21st century.");
+            }
+        } else {
+            errors.add("Invalid century digit.");
+        }
+        if (month < 1 || month > 12) {
+            errors.add("Month must be between 1 and 12.");
+        }
+        if (day < 1 || day > 31) {
+            errors.add("Day must be between 1 and 31.");
+        }
+        // Months with 30 days
+        if (month != 2) {
+            if ((month < 8 && month % 2 == 0 && day > 30) ||
+                (month > 7 && month % 2 != 0 && day > 30)) {
+                errors.add("This month only has 30 days.");
+            }
+        }
+        // February and leap year
+        if (month == 2) {
+            boolean leap = (fullYear % 4 == 0 && (fullYear % 100 != 0 || fullYear % 400 == 0));
+            if ((leap && day > 29) || (!leap && day > 28)) {
+                errors.add("Invalid day for February in the given year.");
+            }
+        }
+        return errors;
     }
-	    }
-
-		String month = cadena.substring(2, 4);
-		int compMonth = Integer.parseInt(month);
-
-		if (compMonth < 1 || compMonth > 12) {
-			validate = false; // Solo 12 meses.
-		}
-
-		String day = cadena.substring(4, 6);
-		int compDay = Integer.parseInt(day);
-
-		if (validate && compDay < 1) {
-			validate = false;
-		}
-		if (validate && compDay > 31) {
-			validate = false;
-		}
-		if (validate && ((compMonth < 8 && compMonth != 2 && compMonth % 2 == 0) && compDay > 30)) {
-			validate = false;
-		}
-		if (validate && ((compMonth > 7 && compMonth != 2 && compMonth % 2 != 0) && compDay > 30)) {
-			validate = false;
-		}
-
-		// Año bisiesto y validación de febrero
-    if (compMonth == 2 && validate) {
-        boolean bisiesto = (yearComplete % 4 == 0 && (yearComplete % 100 != 0 || yearComplete % 400 == 0));
-        if (bisiesto && compDay > 29){
-        	validate = false;
-		}
-        if (!bisiesto && compDay > 28){
-        	validate = false;
-    	}
-    }
-    if(!validate)
-    	errors.add("ID  Invalid");
-		return errors;
-}
         
 }
