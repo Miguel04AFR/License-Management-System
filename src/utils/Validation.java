@@ -131,9 +131,8 @@ public class Validation {
             errors.add("The ID must contain only numbers.");
         }
         // Prevent substring errors if previous checks failed
-        if (!errors.isEmpty()) {
-            return errors;
-        }
+        if (errors.isEmpty()) {
+            
 
         int centuryDigit = Integer.parseInt(id.substring(7, 8));
         int year = Integer.parseInt(id.substring(0, 2));
@@ -176,6 +175,7 @@ public class Validation {
             if ((leap && day > 29) || (!leap && day > 28)) {
                 errors.add("Invalid day for February in the given year.");
             }
+        }
         }
         return errors;
     }

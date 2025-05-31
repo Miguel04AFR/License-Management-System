@@ -11,19 +11,19 @@ import java.util.List;
 import model.Exam;
 import utils.ConnectionManager;
 
-public class ExamService  implements EntityService<Exam> {
+public class ExamService implements EntityService<Exam> {
 
     // Create
     public boolean create(Exam exam) {
         String sql = "INSERT INTO exam (exam_code, exam_type, exam_date, result, examiner_name, entity_code, driver_id) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
+
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             setExamParameters(pstmt, exam);
             return pstmt.executeUpdate() > 0;
-            
+
         } catch (SQLException e) {
             handleSQLException("Error creating exam", e);
             return false;
@@ -34,11 +34,11 @@ public class ExamService  implements EntityService<Exam> {
     public List<Exam> getAll() {
         List<Exam> exams = new ArrayList<>();
         String sql = "SELECT * FROM exam";
-        
+
         try (Connection conn = ConnectionManager.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            
+
             while (rs.next()) {
                 exams.add(mapResultSetToExam(rs));
             }
@@ -52,10 +52,10 @@ public class ExamService  implements EntityService<Exam> {
     public Exam getById(String examCode) {
         String sql = "SELECT * FROM exam WHERE exam_code = ?";
         Exam exam = new Exam();
-        
+
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             pstmt.setString(1, examCode);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -74,15 +74,15 @@ public class ExamService  implements EntityService<Exam> {
                    + "exam_type = ?, exam_date = ?, result = ?, examiner_name = ?, "
                    + "entity_code = ?, driver_id = ? "
                    + "WHERE exam_code = ?";
-        
+
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             setUpdateParameters(pstmt, exam);
             pstmt.setString(7, exam.getExamCode());
-            
+
             return pstmt.executeUpdate() > 0;
-            
+
         } catch (SQLException e) {
             handleSQLException("Error updating exam", e);
             return false;
@@ -92,34 +92,33 @@ public class ExamService  implements EntityService<Exam> {
     // Delete
     public boolean delete(String examCode) {
         String sql = "DELETE FROM exam WHERE exam_code = ?";
-        
+
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             pstmt.setString(1, examCode);
             return pstmt.executeUpdate() > 0;
-            
+
         } catch (SQLException e) {
             handleSQLException("Error deleting exam", e);
             return false;
         }
     }
 
-    // Métodos auxiliares
     private void setExamParameters(PreparedStatement pstmt, Exam exam) throws SQLException {
         pstmt.setString(1, exam.getExamCode());
-        pstmt.setString(2, exam.getExamType());
+        pstmt.setObject(2, exam.getExamType(), java.sql.Types.OTHER); // ENUM exam_type
         pstmt.setDate(3, new java.sql.Date(exam.getExamDate().getTime()));
-        pstmt.setString(4, exam.getResult());
+        pstmt.setObject(4, exam.getResult(), java.sql.Types.OTHER);   // <-- ENUM exam_result
         pstmt.setString(5, exam.getExaminerName());
         pstmt.setString(6, exam.getEntityCode());
         pstmt.setString(7, exam.getDriverId());
     }
 
     private void setUpdateParameters(PreparedStatement pstmt, Exam exam) throws SQLException {
-        pstmt.setString(1, exam.getExamType());
+        pstmt.setObject(1, exam.getExamType(), java.sql.Types.OTHER); // ENUM exam_type
         pstmt.setDate(2, new java.sql.Date(exam.getExamDate().getTime()));
-        pstmt.setString(3, exam.getResult());
+        pstmt.setObject(3, exam.getResult(), java.sql.Types.OTHER);   // <-- ENUM exam_result
         pstmt.setString(4, exam.getExaminerName());
         pstmt.setString(5, exam.getEntityCode());
         pstmt.setString(6, exam.getDriverId());
@@ -142,14 +141,14 @@ public class ExamService  implements EntityService<Exam> {
         e.printStackTrace();
     }
 
-    // Método adicional para exámenes por conductor
+    // Additional method for exams by driver
     public List<Exam> getExamsByDriver(String driverId) {
         List<Exam> exams = new ArrayList<>();
         String sql = "SELECT * FROM exam WHERE driver_id = ?";
-        
+
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             pstmt.setString(1, driverId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {

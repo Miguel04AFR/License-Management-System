@@ -56,11 +56,12 @@ public class LicenseManagementUI extends JFrame {
 
 		JTabbedPane mainTabbedPane = new JTabbedPane();
 		mainTabbedPane.addTab("Dashboard", createDashboardPanel());
-		mainTabbedPane.addTab("Drivers", createDriversPanel());
-		mainTabbedPane.addTab("Licenses", createLicensesPanel());
-		mainTabbedPane.addTab("Exams", createExamsPanel());
-		mainTabbedPane.addTab("Violations", createViolationsPanel());
-		mainTabbedPane.addTab("Reports", createReportsPanel());
+		mainTabbedPane.addTab("Drivers", new DriverPanel());
+		mainTabbedPane.addTab("Licenses",  new LicensePanel());
+		mainTabbedPane.addTab("Exams", new ExamPanel());
+		mainTabbedPane.addTab("Violations", new ViolationPanel());
+		mainTabbedPane.addTab("AssociatedEntity", new AssociatedEntityPanel());
+		mainTabbedPane.addTab("Reports", new ReportPanel());	
 		mainTabbedPane.addTab("Alerts", createAlertsPanel());
 
 		getContentPane().add(mainTabbedPane);
@@ -110,18 +111,12 @@ public class LicenseManagementUI extends JFrame {
 		return dashboardPanel;
 	}
 
-	private JPanel createDriversPanel() {
-		return new DriverPanel();
-	}
 
 
 
 
 
-	private JPanel createLicensesPanel() {
-		return new LicensePanel();
-	}
-
+	
 	private JPanel createAlertsPanel() {
 		JPanel alertsPanel = new JPanel(new BorderLayout());
 
@@ -159,18 +154,7 @@ public class LicenseManagementUI extends JFrame {
 
 
 
-	private JPanel createExamsPanel() {
-		return new ExamPanel();
-	}
 
-	private JPanel createViolationsPanel() {
-		return new ViolationPanel();
-	}
-
-	private JPanel createReportsPanel() {
-
-		return new ReportPanel();
-	}
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {

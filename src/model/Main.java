@@ -1,25 +1,20 @@
 package model;
 
-import services.DriverService;
-import utils.ConnectionManager;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
+import visual.TrafficLightCarAnimation;
 
 public class Main {
-   /* public static void main(String[] args) {
-        DriverService driverService = new DriverService();
-        String targetDriverId = "RFC-MART-850101";
-
-        // Obtener el conductor por ID
-        Driver driver = driverService.getDriverById(targetDriverId);
-
-        if (driver.getDriverId() != null && !driver.getDriverId().isEmpty()) {
-            System.out.println("=== CONDUCTOR ENCONTRADO ===");
-            System.out.println("ID: " + driver.getDriverId());
-            System.out.println("Nombre completo: " + driver.getFirstName() + " " + driver.getLastName());
-            System.out.println("Estado de licencia: " + driver.getLicenseStatus());
-        } else {
-            System.out.println("⚠️ No se encontró ningún conductor con ID: " + targetDriverId);
-        }
-
-      
-    }*/
+	public static void main(String[] args) {
+		 try {
+	            UIManager.setLookAndFeel(new FlatLightLaf());
+	        } catch (Exception ex) {
+	            System.err.println("Failed to initialize FlatLaf");
+	        }
+	        SwingUtilities.invokeLater(TrafficLightCarAnimation::new);
+	}
+	
 }

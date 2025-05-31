@@ -16,9 +16,9 @@ public class AssociatedEntityService implements EntityService<AssociatedEntity>{
 
     // Create
     public boolean create(AssociatedEntity entity) {
-        String sql = "INSERT INTO associated_entity (entity_code, entity_name, entity_type, address, "
-                   + "phone_number, contact_email, director_name, center_code) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO associated_entity (entity_Code, entity_name, entity_type, address, "
+                   + "phone_number, contact_email, director_name) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -31,7 +31,7 @@ public class AssociatedEntityService implements EntityService<AssociatedEntity>{
             return false;
         }
     }
-
+    
     // Read All
     public List<AssociatedEntity> getAll() {
         List<AssociatedEntity> entities = new ArrayList<>();
@@ -74,7 +74,7 @@ public class AssociatedEntityService implements EntityService<AssociatedEntity>{
     public boolean update(AssociatedEntity entity) {
         String sql = "UPDATE associated_entity SET "
                    + "entity_name = ?, entity_type = ?, address = ?, phone_number = ?, "
-                   + "contact_email = ?, director_name = ?, center_code = ? "
+                   + "contact_email = ?, director_name = ? "
                    + "WHERE entity_code = ?";
         
         try (Connection conn = ConnectionManager.getConnection();
@@ -116,7 +116,7 @@ public class AssociatedEntityService implements EntityService<AssociatedEntity>{
         pstmt.setString(5, entity.getPhoneNumber());
         pstmt.setString(6, entity.getContactEmail());
         pstmt.setString(7, entity.getDirectorName());
-        pstmt.setString(8, entity.getCenterCode());
+       
     }
 
     private void setUpdateParameters(PreparedStatement pstmt, AssociatedEntity entity) throws SQLException {
@@ -126,7 +126,7 @@ public class AssociatedEntityService implements EntityService<AssociatedEntity>{
         pstmt.setString(4, entity.getPhoneNumber());
         pstmt.setString(5, entity.getContactEmail());
         pstmt.setString(6, entity.getDirectorName());
-        pstmt.setString(7, entity.getCenterCode());
+  
     }
 
     private AssociatedEntity mapResultSetToEntity(ResultSet rs) throws SQLException {
@@ -138,7 +138,7 @@ public class AssociatedEntityService implements EntityService<AssociatedEntity>{
         entity.setPhoneNumber(rs.getString("phone_number"));
         entity.setContactEmail(rs.getString("contact_email"));
         entity.setDirectorName(rs.getString("director_name"));
-        entity.setCenterCode(rs.getString("center_code"));
+        
         return entity;
     }
 

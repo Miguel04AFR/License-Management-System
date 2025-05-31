@@ -8,7 +8,7 @@ public class AssociatedEntity {
     private String phoneNumber;
     private String contactEmail;
     private String directorName;
-    private String centerCode; // Foreign key
+   
 	public String getEntityCode() {
 		return entityCode;
 	}
@@ -51,10 +51,5 @@ public class AssociatedEntity {
 	public void setDirectorName(String directorName) {
 		this.directorName = directorName;
 	}
-	public String getCenterCode() {
-		return centerCode;
-	}
-	public void setCenterCode(String centerCode) {
-		this.centerCode = centerCode;
-	}
+	
 }
