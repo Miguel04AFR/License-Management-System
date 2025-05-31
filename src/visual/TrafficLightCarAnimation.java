@@ -44,7 +44,7 @@ public class TrafficLightCarAnimation extends JFrame {
             // Try load the logo (adjust the path as needed)
             logoImage = null;
             try {
-                logoImage = new ImageIcon(getClass().getResource("/visual/logo.png")).getImage();
+                logoImage = new ImageIcon(getClass().getResource("/visual/logo_en.png")).getImage();
             } catch (Exception e) {
                 // fallback: logo not found
             }

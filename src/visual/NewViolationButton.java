@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -27,12 +28,12 @@ import org.jdesktop.swingx.JXDatePicker;
 import model.Violation;
 import services.ViolationService;
 import utils.Validation;
-
 public class NewViolationButton extends AbstractAddButton {
     private static final long serialVersionUID = 1L;
 
     private JTextField txtViolationCode;
-    private JTextField txtViolationType;
+    // Reemplaza el JTextField por JComboBox
+    private JComboBox<String> cmbViolationType;
     private JXDatePicker datePicker;
     private JTextField txtLocation;
     private JTextField txtDescription;
@@ -66,7 +67,7 @@ public class NewViolationButton extends AbstractAddButton {
         initializeFormComponents();
 
         addFormField(panel, "Violation Code*:", txtViolationCode);
-        addFormField(panel, "Type*:", txtViolationType);
+        addFormField(panel, "Type*:", cmbViolationType); // Usa el JComboBox aquí
         addFormField(panel, "Date*:", datePicker);
         addFormField(panel, "Location*:", txtLocation);
         addFormField(panel, "Description:", txtDescription);
@@ -79,7 +80,9 @@ public class NewViolationButton extends AbstractAddButton {
 
     private void initializeFormComponents() {
         txtViolationCode = new JTextField();
-        txtViolationType = new JTextField();
+        // Define las opciones del tipo de violación
+        String[] violationTypes = {"Minor", "Serious", "Very Serious"};
+        cmbViolationType = new JComboBox<>(violationTypes);
         datePicker = new JXDatePicker();
         txtLocation = new JTextField();
         txtDescription = new JTextField();
@@ -122,8 +125,10 @@ public class NewViolationButton extends AbstractAddButton {
                 "Invalid code format (VLT-0000)"));
 
         // Type
-        errors.addAll(Validation.validateRequired(txtViolationType.getText(), "Type"));
-        errors.addAll(Validation.validateLength(txtViolationType.getText(), 2, 40, "Type"));
+        // Ya no es un JTextField, así que solo valida que haya selección
+        if (cmbViolationType.getSelectedItem() == null) {
+            errors.add("Type is required");
+        }
 
         // Date
         errors.addAll(Validation.validateRequired(txtLocation.getText(), "Location"));
@@ -132,8 +137,8 @@ public class NewViolationButton extends AbstractAddButton {
         // License Code
         errors.addAll(Validation.validateRequired(txtLicenseCode.getText(), "License Code"));
         errors.addAll(Validation.validateFormat(txtLicenseCode.getText().trim(),
-                "^LIC-\\d{4}$",
-                "Invalid license code format (LIC-0000)"));
+                "^LIC-\\d{3}$",
+                "Invalid license code format (LIC-000)"));
 
         // Deducted Points
         int points = (Integer) spnDeductedPoints.getValue();
@@ -148,7 +153,10 @@ public class NewViolationButton extends AbstractAddButton {
     protected void saveToDatabase() {
         Violation violation = new Violation();
         violation.setViolationCode(txtViolationCode.getText().trim());
-        violation.setViolationType(txtViolationType.getText().trim());
+
+        // Obtiene el valor seleccionado del JComboBox
+        String selectedType = (String) cmbViolationType.getSelectedItem();
+        violation.setViolationType(selectedType);
         java.util.Date utilDate = datePicker.getDate();
         java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
         violation.setDate(sqlDate);

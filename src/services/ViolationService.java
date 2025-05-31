@@ -15,13 +15,20 @@ public class ViolationService implements EntityService<Violation>{
 
     // Create
     public boolean create(Violation violation) {
-        String sql = "INSERT INTO violation (violation_code, violation_type, violation_date, "
-                   + "location, description, deducted_points, is_paid, license_code) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
+    	String sql = "INSERT INTO violation (violation_code, violation_type, violation_date, "
+    	           + "location, description, deducted_points, is_paid, license_code) "
+    	           + "VALUES (?, CAST(? AS violation_type), ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+        	System.out.println("--- Parámetros INSERT ---");
+        	System.out.println("violation_code = [" + violation.getViolationCode() + "]");
+        	System.out.println("violation_type = [" + violation.getViolationType() + "]");
+        	System.out.println("violation_date = [" + violation.getDate() + "]");
+        	System.out.println("location = [" + violation.getLocation() + "]");
+        	System.out.println("description = [" + violation.getDescription() + "]");
+        	System.out.println("deducted_points = [" + violation.getDeductedPoints() + "]");
+        	System.out.println("is_paid = [" + violation.isPaid() + "]");
+        	System.out.println("license_code = [" + violation.getLicenseCode() + "]");
             setViolationParameters(pstmt, violation);
             return pstmt.executeUpdate() > 0;
             
@@ -71,11 +78,10 @@ public class ViolationService implements EntityService<Violation>{
 
     // Update
     public boolean update(Violation violation) {
-        String sql = "UPDATE violation SET "
-                   + "violation_type = ?, violation_date = ?, location = ?, "
-                   + "description = ?, deducted_points = ?, is_paid = ?, license_code = ? "
-                   + "WHERE violation_code = ?";
-        
+    	String sql = "UPDATE violation SET "
+    	           + "violation_type = CAST(? AS violation_type), violation_date = ?, location = ?, "
+    	           + "description = ?, deducted_points = ?, is_paid = ?, license_code = ? "
+    	           + "WHERE violation_code = ?";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
@@ -108,6 +114,8 @@ public class ViolationService implements EntityService<Violation>{
 
     // Métodos auxiliares
     private void setViolationParameters(PreparedStatement pstmt, Violation violation) throws SQLException {
+    	System.out.println("deductedPoints = " + violation.getDeductedPoints());
+    	System.out.println("VIOLATION TYPE QUE SE ENVÍA: [" + violation.getViolationType() + "]");
         pstmt.setString(1, violation.getViolationCode());
         pstmt.setString(2, violation.getViolationType());
         pstmt.setDate(3, new java.sql.Date(violation.getDate().getTime()));
@@ -116,6 +124,15 @@ public class ViolationService implements EntityService<Violation>{
         pstmt.setInt(6, violation.getDeductedPoints());
         pstmt.setBoolean(7, violation.isPaid());
         pstmt.setString(8, violation.getLicenseCode());
+        System.out.println("--- Parámetros INSERT ---");
+        System.out.println("violation_code = [" + violation.getViolationCode() + "]");
+        System.out.println("violation_type = [" + violation.getViolationType() + "]");
+        System.out.println("violation_date = [" + violation.getDate() + "]");
+        System.out.println("location = [" + violation.getLocation() + "]");
+        System.out.println("description = [" + violation.getDescription() + "]");
+        System.out.println("deducted_points = [" + violation.getDeductedPoints() + "]");
+        System.out.println("is_paid = [" + violation.isPaid() + "]");
+        System.out.println("license_code = [" + violation.getLicenseCode() + "]");
     }
 
     private void setUpdateParameters(PreparedStatement pstmt, Violation violation) throws SQLException {

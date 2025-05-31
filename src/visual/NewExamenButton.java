@@ -95,9 +95,31 @@ public class NewExamenButton extends AbstractAddButton {
 
         btnSave.addActionListener(e -> {
             if (validateForm()) {
-                saveToDatabase();
-                refreshCallback.run();
-                dialog.dispose();
+                try {
+                    saveToDatabase();
+                    refreshCallback.run();
+                    dialog.dispose();
+                } catch (RuntimeException ex) {
+                    String msg = ex.getMessage();
+                    Throwable cause = ex.getCause();
+                    // Verifica si la causa es SQLException
+                    if (cause instanceof java.sql.SQLException) {
+                        java.sql.SQLException sqlEx = (java.sql.SQLException) cause;
+                        // 23503 = foreign key violation (PostgreSQL)
+                        if ("23503".equals(sqlEx.getSQLState())) {
+                            JOptionPane.showMessageDialog(dialog,
+                            		"The associated entity code does not exist. Please verify.",
+                            		"Entity not found",
+                                JOptionPane.ERROR_MESSAGE
+                            );
+                            return;
+                        }
+                    }
+                    // Otros errores
+                    if (msg == null || msg.isEmpty()) msg = "Error inesperado al guardar el examen.";
+                    JOptionPane.showMessageDialog(dialog, msg, "Error al guardar", JOptionPane.ERROR_MESSAGE);
+                    // NO cerrar el dialog, así el usuario puede corregir!
+                }
             }
         });
 

@@ -13,23 +13,19 @@ import utils.ConnectionManager;
 
 public class ExamService implements EntityService<Exam> {
 
-    // Create
-    public boolean create(Exam exam) {
-        String sql = "INSERT INTO exam (exam_code, exam_type, exam_date, result, examiner_name, entity_code, driver_id, vehicle_category) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	public boolean create(Exam exam) {
+	    String sql = "INSERT INTO exam (exam_code, exam_date, examiner_name, entity_code, driver_id, result, exam_type, vehicle_category) "
+	               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	    try (Connection conn = ConnectionManager.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        setExamParameters(pstmt, exam);
+	        return pstmt.executeUpdate() > 0;
 
-            setExamParameters(pstmt, exam);
-            return pstmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            handleSQLException("Error creating exam", e);
-            return false;
-        }
-    }
-
+	    } catch (SQLException e) {
+	        throw new RuntimeException(e.getMessage(), e);
+	    }
+	}
     // Read All
     public List<Exam> getAll() {
         List<Exam> exams = new ArrayList<>();
@@ -107,13 +103,13 @@ public class ExamService implements EntityService<Exam> {
 
     private void setExamParameters(PreparedStatement pstmt, Exam exam) throws SQLException {
         pstmt.setString(1, exam.getExamCode());
-        pstmt.setObject(2, exam.getExamType(), java.sql.Types.OTHER); // ENUM exam_type
-        pstmt.setDate(3, new java.sql.Date(exam.getExamDate().getTime()));
-        pstmt.setObject(4, exam.getResult(), java.sql.Types.OTHER);   // <-- ENUM exam_result
-        pstmt.setString(5, exam.getExaminerName());
-        pstmt.setString(6, exam.getEntityCode());
-        pstmt.setString(7, exam.getDriverId());
-        pstmt.setObject(8, exam.getVehicleCategory(), java.sql.Types.OTHER); // New field added
+        pstmt.setDate(2, new java.sql.Date(exam.getExamDate().getTime()));
+        pstmt.setString(3, exam.getExaminerName());
+        pstmt.setString(4, exam.getEntityCode());
+        pstmt.setString(5, exam.getDriverId());
+        pstmt.setString(6, exam.getResult()); // No uses setObject ni Types.OTHER aquí
+        pstmt.setObject(7, exam.getExamType(), java.sql.Types.OTHER); // Enum de Postgres
+        pstmt.setObject(8, exam.getVehicleCategory(), java.sql.Types.OTHER); // Enum de Postgres
     }
 
     private void setUpdateParameters(PreparedStatement pstmt, Exam exam) throws SQLException {
