@@ -10,6 +10,15 @@ public class Exam {
     private String examinerName;
     private String entityCode; // Foreign key
     private String driverId; // Foreign key
+	private String  vehicleCategory;
+	
+
+	public String getVehicleCategory() {
+		return vehicleCategory;
+	}
+	public void setVehicleCategory(String vehicleCategory) {
+		this.vehicleCategory = vehicleCategory;
+	}
 	public String getExamCode() {
 		return examCode;
 	}

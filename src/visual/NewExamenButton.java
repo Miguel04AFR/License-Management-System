@@ -25,9 +25,6 @@ import model.Exam;
 import services.ExamService;
 import utils.Validation;
 
-/**
- * Button to register a new exam, following the pattern of NewDriverButton and NewViolationButton.
- */
 public class NewExamenButton extends AbstractAddButton {
     private static final long serialVersionUID = 1L;
 
@@ -38,6 +35,7 @@ public class NewExamenButton extends AbstractAddButton {
     private JTextField txtExaminerName;
     private JTextField txtEntityCode;
     private JTextField txtDriverId;
+    private JComboBox<String> cmbVehicleCategory; // NEW FIELD
 
     public NewExamenButton(JFrame parent, Runnable refreshCallback) {
         super("New Exam", parent, refreshCallback);
@@ -47,7 +45,7 @@ public class NewExamenButton extends AbstractAddButton {
     protected void showFormDialog() {
         JDialog dialog = new JDialog(parentFrame, "Register Exam", true);
         dialog.setLayout(new BorderLayout());
-        dialog.setPreferredSize(new Dimension(500, 400));
+        dialog.setPreferredSize(new Dimension(500, 450));
 
         JPanel formPanel = createFormPanel();
         dialog.add(new JScrollPane(formPanel), BorderLayout.CENTER);
@@ -68,6 +66,7 @@ public class NewExamenButton extends AbstractAddButton {
         addFormField(panel, "Type*:", cmbExamType);
         addFormField(panel, "Date*:", datePicker);
         addFormField(panel, "Result*:", cmbResult);
+        addFormField(panel, "Vehicle Category*:", cmbVehicleCategory); // NEW FIELD
         addFormField(panel, "Examiner Name*:", txtExaminerName);
         addFormField(panel, "Entity Code*:", txtEntityCode);
         addFormField(panel, "Driver ID*:", txtDriverId);
@@ -80,6 +79,7 @@ public class NewExamenButton extends AbstractAddButton {
         cmbExamType = new JComboBox<>(new String[]{"Theory", "Practical", "Medical"});
         datePicker = new JXDatePicker();
         cmbResult = new JComboBox<>(new String[]{"Approved", "Under Review", "Disapproved"});
+        cmbVehicleCategory = new JComboBox<>(new String[]{"Motorcycle", "Car", "Truck", "Bus"}); // NEW FIELD
         txtExaminerName = new JTextField();
         txtEntityCode = new JTextField();
         txtDriverId = new JTextField();
@@ -131,6 +131,11 @@ public class NewExamenButton extends AbstractAddButton {
             errors.add("You must select a result.");
         }
 
+        // Vehicle Category
+        if (cmbVehicleCategory.getSelectedIndex() < 0) {
+            errors.add("You must select a vehicle category.");
+        }
+
         // Examiner Name
         errors.addAll(Validation.validateRequired(txtExaminerName.getText(), "Examiner Name"));
         errors.addAll(Validation.validateLength(txtExaminerName.getText(), 2, 50, "Examiner Name"));
@@ -151,6 +156,7 @@ public class NewExamenButton extends AbstractAddButton {
         exam.setExamType((String) cmbExamType.getSelectedItem());
         exam.setExamDate(new Date(datePicker.getDate().getTime()));
         exam.setResult((String) cmbResult.getSelectedItem());
+        exam.setVehicleCategory((String) cmbVehicleCategory.getSelectedItem()); // NEW FIELD
         exam.setExaminerName(txtExaminerName.getText().trim());
         exam.setEntityCode(txtEntityCode.getText().trim());
         exam.setDriverId(txtDriverId.getText().trim());

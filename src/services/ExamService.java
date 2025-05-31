@@ -15,8 +15,8 @@ public class ExamService implements EntityService<Exam> {
 
     // Create
     public boolean create(Exam exam) {
-        String sql = "INSERT INTO exam (exam_code, exam_type, exam_date, result, examiner_name, entity_code, driver_id) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO exam (exam_code, exam_type, exam_date, result, examiner_name, entity_code, driver_id, vehicle_category) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -72,14 +72,14 @@ public class ExamService implements EntityService<Exam> {
     public boolean update(Exam exam) {
         String sql = "UPDATE exam SET "
                    + "exam_type = ?, exam_date = ?, result = ?, examiner_name = ?, "
-                   + "entity_code = ?, driver_id = ? "
+                   + "entity_code = ?, driver_id = ?, vehicle_category = ? "
                    + "WHERE exam_code = ?";
 
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             setUpdateParameters(pstmt, exam);
-            pstmt.setString(7, exam.getExamCode());
+            pstmt.setString(8, exam.getExamCode());
 
             return pstmt.executeUpdate() > 0;
 
@@ -113,6 +113,7 @@ public class ExamService implements EntityService<Exam> {
         pstmt.setString(5, exam.getExaminerName());
         pstmt.setString(6, exam.getEntityCode());
         pstmt.setString(7, exam.getDriverId());
+        pstmt.setObject(8, exam.getVehicleCategory(), java.sql.Types.OTHER); // New field added
     }
 
     private void setUpdateParameters(PreparedStatement pstmt, Exam exam) throws SQLException {
@@ -122,6 +123,7 @@ public class ExamService implements EntityService<Exam> {
         pstmt.setString(4, exam.getExaminerName());
         pstmt.setString(5, exam.getEntityCode());
         pstmt.setString(6, exam.getDriverId());
+        pstmt.setObject(7, exam.getVehicleCategory(), java.sql.Types.OTHER); // New field added
     }
 
     private Exam mapResultSetToExam(ResultSet rs) throws SQLException {
@@ -133,6 +135,7 @@ public class ExamService implements EntityService<Exam> {
         exam.setExaminerName(rs.getString("examiner_name"));
         exam.setEntityCode(rs.getString("entity_code"));
         exam.setDriverId(rs.getString("driver_id"));
+        exam.setVehicleCategory(rs.getString("vehicle_category")); // New field added
         return exam;
     }
 
