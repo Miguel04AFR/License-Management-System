@@ -1,10 +1,30 @@
 package visual;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
+import services.AssociatedEntityService;
+import services.DriverService;
+import services.ExamService;
+import services.LicenseService;
+import services.ViolationService;
 
 public class DashboardPanel extends JPanel {
     private static final long serialVersionUID = 1L;
+    private final LicenseService licenseService = new LicenseService();
+    private final ViolationService violationService = new ViolationService();
+    private final ExamService examService = new ExamService();
+    private final DriverService driverService = new DriverService();
+    private final AssociatedEntityService entityService = new AssociatedEntityService();
 
     private final JLabel lblTotalDrivers = new JLabel("0");
     private final JLabel lblTotalLicenses = new JLabel("0");
@@ -20,6 +40,9 @@ public class DashboardPanel extends JPanel {
     private final JLabel lblMedicalExams = new JLabel("0");
     private final JLabel lblTheoryExams = new JLabel("0");
     private final JLabel lblPracticalExams = new JLabel("0");
+    // NUEVOS LABELS PARA ALERTAS PERSONALIZADAS
+    private final JLabel lblSoonToExpireLicenses = new JLabel("0");
+    private final JLabel lblPendingMedicalExams = new JLabel("0");
 
     public DashboardPanel() {
         setLayout(new BorderLayout(16, 16));
@@ -50,12 +73,33 @@ public class DashboardPanel extends JPanel {
         detailsPanel.add(makeSmallCard("Suspended Licenses", lblSuspendedLicenses));
         detailsPanel.add(makeSmallCard("Renewed Licenses", lblRenewedLicenses));
         detailsPanel.add(makeSmallCard("Paid Violations", lblPaidViolations));
-       
         detailsPanel.add(makeSmallCard("Medical Exams", lblMedicalExams));
         detailsPanel.add(makeSmallCard("Theory Exams", lblTheoryExams));
         detailsPanel.add(makeSmallCard("Practical Exams", lblPracticalExams));
 
         add(detailsPanel, BorderLayout.SOUTH);
+
+        refreshData();
+    }
+
+    public void refreshData() {
+        setTotalDrivers(driverService.getAll().size());
+        setTotalLicenses(licenseService.getAll().size());
+        setActiveLicenses(licenseService.countActiveLicenses());
+        setInactiveLicenses(licenseService.countInactiveLicenses());
+        setSuspendedLicenses(licenseService.countSuspendedLicenses());
+        setRenewedLicenses(licenseService.countRenewedLicenses());
+        setTotalViolations(violationService.getAll().size());
+        setPaidViolations(violationService.countPaidViolations());
+        setUnpaidViolations(violationService.countUnpaidViolations());
+        setAssociatedEntities(entityService.getAll().size());
+        setTotalExams(examService.getAll().size());
+        setMedicalExams(examService.countMedicalExams());
+        setTheoryExams(examService.countTheoryExams());
+        setPracticalExams(examService.countPracticalExams());
+        
+        setPendingMedicalExams(examService.countDriversWithoutMedicalExam());
+        setSoonToExpireLicenses(licenseService.countSoonToExpireLicenses());
     }
 
     private JPanel makeCard(String title, JLabel valueLabel) {
@@ -83,15 +127,12 @@ public class DashboardPanel extends JPanel {
         panel.setBorder(BorderFactory.createTitledBorder("Alerts"));
         panel.setOpaque(false);
 
-        panel.add(makeAlertRow("Unpaid Violations", lblUnpaidViolations, new Color(211, 47, 47))); // rojo solo texto
-        panel.add(makeAlertRow("Soon-to-Expire Licenses", lblInactiveLicenses,  new Color(255, 160, 0))); // sin color especial
-        panel.add(makeAlertRow("Pending Medical Exams", lblMedicalExams, new Color(46, 125, 50))); // sin color especial
+        panel.add(makeAlertRow("Unpaid Violations", lblUnpaidViolations, new Color(211, 47, 47)));
+        panel.add(makeAlertRow("Soon-to-Expire Licenses", lblSoonToExpireLicenses, new Color(255, 160, 0)));
+        panel.add(makeAlertRow("Pending Medical Exams", lblPendingMedicalExams, new Color(46, 125, 50)));
         return panel;
     }
 
-    /**
-     * Crea una fila de alerta; solo el texto tiene color si se indica, el fondo NO cambia.
-     */
     private JPanel makeAlertRow(String labelText, JLabel valueLabel, Color textColor) {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 2));
         row.setOpaque(false);
@@ -124,4 +165,7 @@ public class DashboardPanel extends JPanel {
     public void setMedicalExams(int value) { lblMedicalExams.setText(String.valueOf(value)); }
     public void setTheoryExams(int value) { lblTheoryExams.setText(String.valueOf(value)); }
     public void setPracticalExams(int value) { lblPracticalExams.setText(String.valueOf(value)); }
+    // NUEVOS SETTERS
+    public void setSoonToExpireLicenses(int value) { lblSoonToExpireLicenses.setText(String.valueOf(value)); }
+    public void setPendingMedicalExams(int value) { lblPendingMedicalExams.setText(String.valueOf(value)); }
 }

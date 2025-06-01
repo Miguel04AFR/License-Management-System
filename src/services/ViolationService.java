@@ -95,7 +95,32 @@ public class ViolationService implements EntityService<Violation>{
             return false;
         }
     }
-
+    public int countUnpaidViolations() {
+        String sql = "SELECT COUNT(*) FROM violation WHERE is_paid = false";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting unpaid violations", e);
+        }
+        return 0;
+    }
+    public int countPaidViolations() {
+        String sql = "SELECT COUNT(*) FROM violation WHERE is_paid = true";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting paid violations", e);
+        }
+        return 0;
+    }
     // Delete
     public boolean delete(String violationCode) {
         String sql = "DELETE FROM violation WHERE violation_code = ?";

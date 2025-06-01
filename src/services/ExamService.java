@@ -159,4 +159,57 @@ public class ExamService implements EntityService<Exam> {
         }
         return exams;
     }
+    public int countMedicalExams() {
+        String sql = "SELECT COUNT(*) FROM exam WHERE exam_type = 'Medical'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting medical exams", e);
+        }
+        return 0;
+    }
+    public int countDriversWithoutMedicalExam() {
+        String sql = "SELECT COUNT(*) FROM driver d WHERE NOT EXISTS " +
+                     "(SELECT 1 FROM exam e WHERE e.driver_id = d.driver_id AND e.exam_type = 'Medical')";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting drivers without medical exam", e);
+        }
+        return 0;
+    }
+    public int countTheoryExams() {
+        String sql = "SELECT COUNT(*) FROM exam WHERE exam_type = 'Theory'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting theory exams", e);
+        }
+        return 0;
+    }
+    public int countPracticalExams() {
+        String sql = "SELECT COUNT(*) FROM exam WHERE exam_type = 'Practical'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting practical exams", e);
+        }
+        return 0;
+    }
 }

@@ -165,6 +165,88 @@ public class LicenseService implements EntityService<License> {
         }
         return licenses;
     }
+    public int countActiveLicenses() {
+        String sql = "SELECT COUNT(*) FROM license l JOIN driver d ON l.driver_id = d.driver_id WHERE d.license_status = 'Active'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting active licenses", e);
+        }
+        return 0;
+    }
+    public int countInactiveLicenses() {
+        String sql = "SELECT COUNT(*) FROM license l JOIN driver d ON l.driver_id = d.driver_id WHERE d.license_status = 'Expired'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting inactive licenses", e);
+        }
+        return 0;
+    }
+    public int countSoonToExpireLicenses() {
+        String sql = "SELECT COUNT(*) FROM license " +
+                     "WHERE is_renewed = false " +
+                     "AND expiration_date > CURRENT_DATE " +
+                     "AND expiration_date <= CURRENT_DATE + INTERVAL '1 month'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting soon-to-expire licenses", e);
+        }
+        return 0;
+    }
+    public int countRenewedLicenses() {
+        String sql = "SELECT COUNT(*) FROM license WHERE is_renewed = true";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting renewed licenses", e);
+        }
+        return 0;
+    }
+    public int countSuspendedLicenses() {
+        String sql = "SELECT COUNT(*) FROM license l JOIN driver d ON l.driver_id = d.driver_id WHERE d.license_status = 'Suspended'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting suspended licenses", e);
+        }
+        return 0;
+    }
+    // Contar licencias en renovación pendiente
+    public int countPendingRenewals() {
+        String sql = "SELECT COUNT(*) FROM license WHERE is_renewed = false AND issue_date <= (CURRENT_DATE - INTERVAL '10 years')";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error counting pending renewals", e);
+        }
+        return 0;
+    }
 
     // Método para licencias próximas a expirar
     public List<License> getExpiringLicenses(int daysThreshold) {
