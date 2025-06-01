@@ -60,19 +60,16 @@ public class InfractionsInPeriodReport extends JPanel {
             Violation v = filtered.get(i);
             // Get license and driver info
             String driverName = "(unknown)";
-            String licenseType = "";
-            String driverId = "";
+          
             if (v.getLicenseCode() != null) {
                 License lic = licenseService.getById(v.getLicenseCode());
                 if (lic != null) {
-                    licenseType = lic.getLicenseType();
+                  
                     Driver drv = driverService.getById(lic.getDriverId());
                     if (drv != null) {
                         driverName = drv.getFirstName() + " " + drv.getLastName();
-                        driverId = drv.getDriverId();
-                    } else {
-                        driverId = lic.getDriverId();
-                    }
+                        
+                    } 
                 }
             }
             rows[i][0] = v.getViolationCode();
