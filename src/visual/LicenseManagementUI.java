@@ -23,6 +23,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import visual.EntityPanels.AssociatedEntityPanel;
+import visual.EntityPanels.DriverPanel;
+import visual.EntityPanels.ExamPanel;
+import visual.EntityPanels.LicensePanel;
+import visual.EntityPanels.ViolationPanel;
+import visual.Reports.ReportPanel;
+
 
 public class LicenseManagementUI extends JFrame {
 	private static final long serialVersionUID = 1L;
