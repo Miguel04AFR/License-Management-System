@@ -12,6 +12,10 @@ import model.Driver;
 import services.LicenseService;
 import services.DriverService;
 
+import static report_models.ExamsInPeriodReportModel.saveExamsInPeriod;
+import static report_models.ExpiredLicensesReportModel.saveExpiredLicensesReport;
+import static report_models.SaveLocation.askSaveLocation;
+
 /**
  * Report: Drivers with Expired Licenses in a Period.
  * Shows drivers with licenses expired in a given period, ordered by expiration date.
@@ -85,9 +89,20 @@ public class ExpiredLicensesReport extends JPanel {
 
         dialog.add(tablePanel, BorderLayout.CENTER);
 
-        // Export button (disabled for now)
+
         JButton exportButton = new JButton("Export...");
-        exportButton.setEnabled(false); // no action yet
+        exportButton.setEnabled(true);
+        exportButton.addActionListener(e -> {
+            try {
+                String filePath = askSaveLocation(dialog);
+                if (filePath != null&&!filePath.trim().isEmpty()) {
+                    saveExpiredLicensesReport(filePath, columns, rows);
+                    JOptionPane.showMessageDialog(dialog, "Report exported successfully!", "Export PDF", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error generating report: " + ex.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(exportButton);
 

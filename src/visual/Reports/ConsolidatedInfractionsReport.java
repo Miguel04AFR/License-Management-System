@@ -7,7 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import model.Violation;
+import report_models.ConsolidatedInfractionsReportModel;
 import services.ViolationService;
+
+import static report_models.ConsolidatedInfractionsReportModel.saveConsolidatedInfractions;
+import static report_models.SaveLocation.askSaveLocation;
 
 /**
  * Report: Consolidated Infractions by Type in a Year.
@@ -94,7 +98,18 @@ public class ConsolidatedInfractionsReport extends JPanel {
 
         // Export button (disabled for now)
         JButton exportButton = new JButton("Export...");
-        exportButton.setEnabled(false); // no action yet
+        exportButton.setEnabled(true); // no action yet
+        exportButton.addActionListener(e -> {
+            try {
+                String filePath = askSaveLocation(dialog);
+                if (filePath != null) {
+                    saveConsolidatedInfractions(rowsList, new java.io.File(filePath));
+                    JOptionPane.showMessageDialog(dialog, "Report exported successfully!", "Export PDF", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error generating report: " + ex.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(exportButton);
 
@@ -114,7 +129,7 @@ public class ConsolidatedInfractionsReport extends JPanel {
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
-    private static class ConsolidatedRow {
+    public static class ConsolidatedRow {
         int year;
         String infractionType;
         int count = 0;
@@ -125,6 +140,32 @@ public class ConsolidatedInfractionsReport extends JPanel {
         ConsolidatedRow(int year, String infractionType) {
             this.year = year;
             this.infractionType = infractionType;
+        }
+
+        public char[] getYear() {
+            return String.valueOf(year).toCharArray();
+        }
+
+        public String getInfractionType() {
+            return infractionType;
+        }
+
+
+        public char[] getCount() {
+            return String.valueOf(count).toCharArray();
+        }
+
+        public char[] getTotalPoints() {
+            return String.valueOf(totalPoints).toCharArray();
+        }
+
+
+        public char[] getPaidCount() {
+            return String.valueOf(paidCount).toCharArray();
+        }
+
+        public char[] getPendingCount() {
+            return String.valueOf(pendingCount).toCharArray();
         }
     }
 }

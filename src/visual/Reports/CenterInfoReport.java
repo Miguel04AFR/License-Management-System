@@ -2,9 +2,18 @@ package visual.Reports;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileOutputStream;
 import java.util.List;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfWriter;
 import model.Center;
 import services.CenterService;
+
+import static report_models.CenterInfoReportModel.saveCenterToPdf;
+import static report_models.SaveLocation.askSaveLocation;
 
 /**
  * Report: Center Information Sheet.
@@ -77,7 +86,21 @@ public class CenterInfoReport extends JPanel {
 
         // Export button (disabled for now)
         JButton exportButton = new JButton("Export...");
-        exportButton.setEnabled(false); // no action yet
+        exportButton.setEnabled(true); // no action yet
+        exportButton.addActionListener(e -> {
+            try {
+                String filePath = askSaveLocation(dialog);
+                if (filePath != null) {
+                    saveCenterToPdf(center, filePath);
+                    JOptionPane.showMessageDialog(dialog, "Reporte guardado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "No se seleccionó una ubicación válida.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Ocurrió un error al guardar el reporte: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(exportButton);
 
@@ -85,7 +108,10 @@ public class CenterInfoReport extends JPanel {
         dialog.pack();
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
+
+
     }
+
 
     private static void addRow(JPanel panel, String label, String value, GridBagConstraints gbc, int y) {
         gbc.gridx = 0; gbc.gridy = y; gbc.weightx = 0;
@@ -93,4 +119,5 @@ public class CenterInfoReport extends JPanel {
         gbc.gridx = 1; gbc.weightx = 1;
         panel.add(new JLabel(value), gbc);
     }
+
 }

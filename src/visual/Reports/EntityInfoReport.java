@@ -6,6 +6,10 @@ import java.util.List;
 import model.AssociatedEntity;
 import services.AssociatedEntityService;
 
+import static report_models.DriverInfoReportModel.saveDriverInfoReport;
+import static report_models.EntityInfoReportModel.saveEntityInfoReport;
+import static report_models.SaveLocation.askSaveLocation;
+
 /**
  * Report: Associated Entity Information Sheet.
  * Displays a list of registered associated entities; shows details of the selected one.
@@ -73,9 +77,21 @@ public class EntityInfoReport extends JPanel {
 
         dialog.add(infoPanel, BorderLayout.CENTER);
 
-        // Export button (disabled for now)
+
         JButton exportButton = new JButton("Export...");
-        exportButton.setEnabled(false); // no action yet
+        exportButton.setEnabled(true);
+        AssociatedEntity finalSelected = selected;
+        exportButton.addActionListener(e -> {
+            try {
+                String filePath = askSaveLocation(dialog);
+                if (filePath != null&&!filePath.trim().isEmpty()) {
+                    saveEntityInfoReport(finalSelected, filePath);
+                    JOptionPane.showMessageDialog(dialog, "Report exported successfully!", "Export PDF", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error generating report: " + ex.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(exportButton);
 
