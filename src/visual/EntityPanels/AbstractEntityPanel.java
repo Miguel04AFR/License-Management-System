@@ -13,6 +13,9 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
     protected EntityService<T> service;
     protected String[] columns;
     protected DefaultTableModel model;
+    protected JButton btnEdit;
+    protected JButton btnDelete;
+    protected String user;
 
     public AbstractEntityPanel(EntityService<T> service, String[] columns) {
         this.service = service;
@@ -34,8 +37,8 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
     private JToolBar createToolbar() {
         JToolBar toolbar = new JToolBar();
         JButton btnAdd = createAddButton();
-        JButton btnEdit = new JButton("Edit");
-        JButton btnDelete = new JButton("Delete");
+         btnEdit = new JButton("Edit");
+         btnDelete = new JButton("Delete");
 
         btnEdit.addActionListener(e -> handleEdit());
         btnDelete.addActionListener(e -> handleDelete());
@@ -83,8 +86,36 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
             refreshTable();
         }
     }
+    
 
-    // Deben implementarse en subclases:
+
+    public JButton getBtnEdit() {
+		return btnEdit;
+	}
+
+	public void setBtnEdit(JButton btnEdit) {
+		this.btnEdit = btnEdit;
+	}
+
+	public JButton getBtnDelete() {
+		return btnDelete;
+	}
+
+	public void setBtnDelete(JButton btnDelete) {
+		this.btnDelete = btnDelete;
+	}
+	
+	protected void hideDelete() {
+    	getBtnDelete().setVisible(false);
+    	getBtnDelete().setEnabled(false);
+    }
+	
+	protected void hideEdit() {
+    	getBtnEdit().setVisible(false);
+    	getBtnEdit().setEnabled(false);
+    }
+
+	// Deben implementarse en subclases:
     protected abstract Object[] getRowData(T entity);
     protected abstract T getEntityFromRow(int row);
     protected abstract String getEntityIdFromRow(int row);

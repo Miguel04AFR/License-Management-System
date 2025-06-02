@@ -19,7 +19,7 @@ public class LicensePanel extends AbstractEntityPanel<License> {
     private JButton filterButton;
     private JButton clearFilterButton;
 
-    public LicensePanel() {
+    public LicensePanel(String rol) {
         super(new LicenseService(), new String[]{
             "Code", "Type", "Issue Date", "Expiration Date", "Vehicle Category", "Restrictions", "Renewed", "Driver ID"
         });
@@ -38,6 +38,10 @@ public class LicensePanel extends AbstractEntityPanel<License> {
             vehicleFilterCombo.setSelectedIndex(0);
             renewedFilterCombo.setSelectedIndex(0);
             driverIdFilterField.setText("");
+            
+
+            
+            
             refreshTable();
         });
 
@@ -75,6 +79,20 @@ public class LicensePanel extends AbstractEntityPanel<License> {
 
         add(unifiedPanel, BorderLayout.NORTH);
 
+        
+        if(rol.equalsIgnoreCase("examiner")) {
+			hideDelete();
+			hideEdit();
+		}
+		else if (rol.equalsIgnoreCase("manager")) {
+			
+		
+		}
+		else if (rol.equalsIgnoreCase("supervisor")) {
+			
+		}
+        
+        
         refreshTable();
     }
 

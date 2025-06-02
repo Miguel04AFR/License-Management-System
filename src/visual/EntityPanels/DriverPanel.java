@@ -18,7 +18,7 @@ public class DriverPanel extends AbstractEntityPanel<Driver> {
     private JButton filterButton;
     private JButton clearFilterButton;
 
-    public DriverPanel() {
+    public DriverPanel(String rol) {
     	 super(new DriverService(), new String[]{
     		        "ID", "First Name", "Last Name", "Birth Date", "Address", "Phone Number", "Email", "License Status"
     		    });
@@ -35,6 +35,9 @@ public class DriverPanel extends AbstractEntityPanel<Driver> {
     		        firstNameFilterField.setText("");
     		        lastNameFilterField.setText("");
     		        licenseStatusFilterCombo.setSelectedIndex(0);
+    		        
+    		       
+    		        
     		        refreshTable();
     		    });
 
@@ -69,7 +72,21 @@ public class DriverPanel extends AbstractEntityPanel<Driver> {
     		    unifiedPanel.add(filterPanel);
 
     		    add(unifiedPanel, BorderLayout.NORTH);
-
+    		    
+    		    
+    		    //validation hide
+				 if(rol.equalsIgnoreCase("examiner")) {
+					hideDelete();
+					hideEdit();
+				}
+				else if (rol.equalsIgnoreCase("manager")) {
+					
+				
+				}
+				else if (rol.equalsIgnoreCase("supervisor")) {
+					
+				}
+    		   
     		    refreshTable();
     		}
     
@@ -202,4 +219,6 @@ public class DriverPanel extends AbstractEntityPanel<Driver> {
     protected JButton createAddButton() {
         return new NewDriverButton(null, this::refreshTable);
     }
+    
+    
 }

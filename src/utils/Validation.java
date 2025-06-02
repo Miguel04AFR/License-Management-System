@@ -179,5 +179,17 @@ public class Validation {
         }
         return errors;
     }
+    public boolean validateExaminer(String user,String pass) {
+    	return (user.equalsIgnoreCase("examiner") && pass.equalsIgnoreCase("examiner")) ? true : false;
+    }
+    public boolean validateAdmin(String user,String pass) {
+    	return (user.equalsIgnoreCase("admin") && pass.equalsIgnoreCase("admin")) ? true : false;
+    }
+    public boolean validateManager(String user,String pass) {
+    	return (user.equalsIgnoreCase("manager") && pass.equalsIgnoreCase("manager")) ? true : false;
+    }
+    public boolean validateSupervisor(String user,String pass) {
+    	return (user.equalsIgnoreCase("supervisor") && pass.equalsIgnoreCase("supervisor")) ? true : false;
+    }
         
 }
