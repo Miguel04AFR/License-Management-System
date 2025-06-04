@@ -1,10 +1,10 @@
 package visual.Reports;
 
-<<<<<<< Updated upstream
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-=======
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -26,7 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
->>>>>>> Stashed changes
+
 import model.Center;
 import services.CenterService;
 

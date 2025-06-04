@@ -9,8 +9,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< Updated upstream
-=======
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -26,7 +25,7 @@ import services.AssociatedEntityService;
 import services.DriverService;
 import services.ExamService;
 
->>>>>>> Stashed changes
+
 /**
  * Report: Exams Taken in a Period.
  * Shows exams taken in a time period, ordered by exam date.

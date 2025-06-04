@@ -9,8 +9,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< Updated upstream
-=======
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -24,7 +23,7 @@ import model.License;
 import services.DriverService;
 import services.LicenseService;
 
->>>>>>> Stashed changes
+
 /**
  * Report: Drivers with Expired Licenses in a Period.
  * Shows drivers with licenses expired in a given period, ordered by expiration date.

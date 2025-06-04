@@ -12,7 +12,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
+import visual.EntityPanels.CenterInfoPanel;
 import visual.EntityPanels.AssociatedEntityPanel;
 import visual.EntityPanels.DriverPanel;
 import visual.EntityPanels.ExamPanel;
@@ -80,18 +80,23 @@ public class LicenseManagementUI extends JFrame {
 
 		JMenu settingsMenu = new JMenu("Settings");
 		JMenu themeMenu = new JMenu("Theme");
-
+	
 		JMenuItem lightTheme = new JMenuItem("Light");
 		JMenuItem darkTheme = new JMenuItem("Dark");
-
+		JMenuItem centerConfig = new JMenuItem("Center configuration"); // Nuevo botón
+	
 		lightTheme.addActionListener(this::toggleTheme);
 		darkTheme.addActionListener(this::toggleTheme);
+	
+		centerConfig.addActionListener(e -> CenterInfoPanel.showEditableDialog(this));
 
+	
 		themeMenu.add(lightTheme);
 		themeMenu.add(darkTheme);
 		settingsMenu.add(themeMenu);
+		settingsMenu.add(centerConfig); // Añadir el nuevo botón al menú "Settings"
 		menuBar.add(settingsMenu);
-
+	
 		setJMenuBar(menuBar);
 	}
 

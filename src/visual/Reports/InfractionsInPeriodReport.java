@@ -9,8 +9,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< Updated upstream
-=======
+
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -26,7 +26,7 @@ import services.DriverService;
 import services.LicenseService;
 import services.ViolationService;
 
->>>>>>> Stashed changes
+
 /**
  * Report: Registered Infractions in a Period.
  * Shows infractions registered in a given period, ordered by infraction date.

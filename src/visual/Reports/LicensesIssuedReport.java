@@ -9,8 +9,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< Updated upstream
-=======
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -24,7 +23,6 @@ import model.License;
 import services.DriverService;
 import services.LicenseService;
 
->>>>>>> Stashed changes
 /**
  * Report: Licenses Issued in a Period.
  * Shows licenses issued in a time period, ordered by issue date.
