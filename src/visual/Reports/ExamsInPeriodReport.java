@@ -1,19 +1,32 @@
 package visual.Reports;
 
-import javax.swing.*;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.sql.Date;
-
-import java.util.List;
 import java.util.ArrayList;
-import model.Exam;
-import model.Driver;
-import model.AssociatedEntity;
-import services.ExamService;
-import services.DriverService;
-import services.AssociatedEntityService;
+import java.util.List;
 
+<<<<<<< Updated upstream
+=======
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+
+import model.AssociatedEntity;
+import model.Driver;
+import model.Exam;
+import services.AssociatedEntityService;
+import services.DriverService;
+import services.ExamService;
+
+>>>>>>> Stashed changes
 /**
  * Report: Exams Taken in a Period.
  * Shows exams taken in a time period, ordered by exam date.

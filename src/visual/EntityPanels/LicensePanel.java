@@ -1,14 +1,24 @@
 package visual.EntityPanels;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.sql.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+
 import model.License;
 import services.LicenseService;
 import visual.Buttons.NewLicenseButton;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.sql.Date;
 
 public class LicensePanel extends AbstractEntityPanel<License> {
     private static final long serialVersionUID = 1L;
@@ -19,7 +29,7 @@ public class LicensePanel extends AbstractEntityPanel<License> {
     private JButton filterButton;
     private JButton clearFilterButton;
 
-    public LicensePanel(String rol) {
+    public LicensePanel() {
         super(new LicenseService(), new String[]{
             "Code", "Type", "Issue Date", "Expiration Date", "Vehicle Category", "Restrictions", "Renewed", "Driver ID"
         });
@@ -38,10 +48,6 @@ public class LicensePanel extends AbstractEntityPanel<License> {
             vehicleFilterCombo.setSelectedIndex(0);
             renewedFilterCombo.setSelectedIndex(0);
             driverIdFilterField.setText("");
-            
-
-            
-            
             refreshTable();
         });
 
@@ -79,20 +85,6 @@ public class LicensePanel extends AbstractEntityPanel<License> {
 
         add(unifiedPanel, BorderLayout.NORTH);
 
-        
-        if(rol.equalsIgnoreCase("examiner")) {
-			hideDelete();
-			hideEdit();
-		}
-		else if (rol.equalsIgnoreCase("manager")) {
-			
-		
-		}
-		else if (rol.equalsIgnoreCase("supervisor")) {
-			
-		}
-        
-        
         refreshTable();
     }
 

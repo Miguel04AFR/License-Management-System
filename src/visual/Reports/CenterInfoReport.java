@@ -1,8 +1,32 @@
 package visual.Reports;
 
+<<<<<<< Updated upstream
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+=======
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+>>>>>>> Stashed changes
 import model.Center;
 import services.CenterService;
 
@@ -54,7 +78,7 @@ public class CenterInfoReport extends JPanel {
 
         byte[] logoBytes = center.getLogo();
         if (logoBytes != null && logoBytes.length > 0) {
-            try {
+             try {
                 ImageIcon icon = new ImageIcon(logoBytes);
                 // Optionally scale
                 Image img = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);

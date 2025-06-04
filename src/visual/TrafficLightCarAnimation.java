@@ -1,9 +1,20 @@
 package visual;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 /**
  * Splash animation: logo in the sky, a car waits at a red traffic light, then moves when the light turns green,
@@ -74,7 +85,7 @@ public class TrafficLightCarAnimation extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     parent.dispose();
                     EventQueue.invokeLater(() -> {
-                        new Login().setVisible(true);
+                        new LicenseManagementUI().setVisible(true);
                     });
                 });
             }

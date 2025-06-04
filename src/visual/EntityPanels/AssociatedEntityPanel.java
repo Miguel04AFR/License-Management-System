@@ -1,13 +1,23 @@
 package visual.EntityPanels;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+
 import model.AssociatedEntity;
 import services.AssociatedEntityService;
 import visual.Buttons.NewAssociatedEntityButton;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class AssociatedEntityPanel extends AbstractEntityPanel<AssociatedEntity> {
     private static final long serialVersionUID = 1L;
@@ -16,7 +26,7 @@ public class AssociatedEntityPanel extends AbstractEntityPanel<AssociatedEntity>
     private JButton filterButton;
     private JButton clearFilterButton;
 
-    public AssociatedEntityPanel(String rol) {
+    public AssociatedEntityPanel() {
         super(new AssociatedEntityService(), new String[]{
                 "Entity Code", "Entity Name", "Entity Type", "Address", "Phone Number", "Contact Email", "Director Name"
         });
@@ -31,8 +41,6 @@ public class AssociatedEntityPanel extends AbstractEntityPanel<AssociatedEntity>
         clearFilterButton.addActionListener(e -> {
             entityNameFilterField.setText("");
             entityTypeFilterCombo.setSelectedIndex(0);
-            
-            
             refreshTable();
         });
 
@@ -65,19 +73,7 @@ public class AssociatedEntityPanel extends AbstractEntityPanel<AssociatedEntity>
         unifiedPanel.add(filterPanel);
 
         add(unifiedPanel, BorderLayout.NORTH);
-        
-        //validation hide
-			 if(rol.equalsIgnoreCase("examiner")) {
-				hideDelete();
-				hideEdit();
-			}
-			else if (rol.equalsIgnoreCase("manager")) {
-				
-			
-			}
-			else if (rol.equalsIgnoreCase("supervisor")) {
-				
-			}
+
         refreshTable();
     }
 
@@ -198,13 +194,10 @@ public class AssociatedEntityPanel extends AbstractEntityPanel<AssociatedEntity>
             }
             refreshTable();
         }
-       
     }
 
     @Override
     protected JButton createAddButton() {
         return new NewAssociatedEntityButton(null, this::refreshTable);
     }
-    
-
 }

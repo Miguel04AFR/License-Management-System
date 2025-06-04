@@ -1,16 +1,30 @@
 package visual.Reports;
 
-import javax.swing.*;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.sql.Date;
-import java.util.List;
 import java.util.ArrayList;
-import model.License;
-import model.Driver;
-import services.LicenseService;
-import services.DriverService;
+import java.util.List;
 
+<<<<<<< Updated upstream
+=======
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+
+import model.Driver;
+import model.License;
+import services.DriverService;
+import services.LicenseService;
+
+>>>>>>> Stashed changes
 /**
  * Report: Licenses Issued in a Period.
  * Shows licenses issued in a time period, ordered by issue date.

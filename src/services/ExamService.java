@@ -26,6 +26,7 @@ public class ExamService implements EntityService<Exam> {
 	        throw new RuntimeException(e.getMessage(), e);
 	    }
 	}
+	
     // Read All
     public List<Exam> getAll() {
         List<Exam> exams = new ArrayList<>();

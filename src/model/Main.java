@@ -1,12 +1,10 @@
 package model;
 
 import javax.swing.SwingUtilities;
-
 import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
-import visual.Login;
 import visual.TrafficLightCarAnimation;
 
 public class Main {
@@ -14,11 +12,23 @@ public class Main {
 
 		 try {
 	            UIManager.setLookAndFeel(new FlatLightLaf());
-	            SwingUtilities.invokeLater(TrafficLightCarAnimation::new);
 	        } catch (Exception ex) {
 	            System.err.println("Failed to initialize FlatLaf");
 	        }
-	        
+	        SwingUtilities.invokeLater(TrafficLightCarAnimation::new);
 	}
 	
+		/*  Driver driver = new Driver(
+		            "DR123",
+		            "Juan",
+		            "Pérez",
+		            new Date(),
+		            "Av. Siempre Viva 123",
+		            "555-1234",
+		            "juan.perez@email.com",
+		            "Vigente"
+		        );
+
+		        DriverPDFGenerator.createDriverPDF(driver);}
+		        */
 }

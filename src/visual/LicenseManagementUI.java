@@ -2,17 +2,12 @@ package visual;
 
 
 import java.awt.EventQueue;
-
 import java.awt.event.ActionEvent;
 
-
 import javax.swing.JFrame;
-
-
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -30,14 +25,14 @@ public class LicenseManagementUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private boolean darkMode = false;
 
-	public LicenseManagementUI(String rol) {
-		initializeUI(rol);
+	public LicenseManagementUI() {
+		initializeUI();
 	}
 
-	private void initializeUI(String rol) {
+	private void initializeUI() {
 		setupTheme();
 		createMenu();
-		createMainUI(rol);
+		createMainUI();
 		setupTheme();
 	}
 	private void setupTheme() {
@@ -52,7 +47,7 @@ public class LicenseManagementUI extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	private void createMainUI(String rol) {
+	private void createMainUI() {
 		setTitle("Driver License Management System");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1280, 720);
@@ -60,11 +55,11 @@ public class LicenseManagementUI extends JFrame {
 
 		JTabbedPane mainTabbedPane = new JTabbedPane();
 		mainTabbedPane.addTab("Sumary", new DashboardPanel());
-		mainTabbedPane.addTab("Drivers", new DriverPanel(rol));
-		mainTabbedPane.addTab("Licenses",  new LicensePanel(rol));
-		mainTabbedPane.addTab("Exams", new ExamPanel(rol));
-		mainTabbedPane.addTab("Violations", new ViolationPanel(rol));
-		mainTabbedPane.addTab("AssociatedEntity", new AssociatedEntityPanel(rol));
+		mainTabbedPane.addTab("Drivers", new DriverPanel());
+		mainTabbedPane.addTab("Licenses",  new LicensePanel());
+		mainTabbedPane.addTab("Exams", new ExamPanel());
+		mainTabbedPane.addTab("Violations", new ViolationPanel());
+		mainTabbedPane.addTab("AssociatedEntity", new AssociatedEntityPanel());
 		mainTabbedPane.addTab("Reports", new ReportPanel());	
 
 
@@ -101,9 +96,22 @@ public class LicenseManagementUI extends JFrame {
 	}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
-			new LicenseManagementUI("admin").setVisible(true);
+			new LicenseManagementUI().setVisible(true);
 		});
 	}
 }

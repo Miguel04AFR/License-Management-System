@@ -68,7 +68,7 @@ public class Validation {
     // Mostrar errores de validación
     public static boolean showErrors(Component parent, ArrayList<String> errors) {
         if (!errors.isEmpty()) {
-            StringBuilder message = new StringBuilder("<html><b>Errores de validación:</b><ul>");
+            StringBuilder message = new StringBuilder("<html><b>Errors:</b><ul>");
             for (String error : errors) {
                 message.append("<li>").append(error).append("</li>");
             }
@@ -76,7 +76,7 @@ public class Validation {
             
             JOptionPane.showMessageDialog(null,
                 message.toString(),
-                "Validación Fallida",
+                "Validation fail",
                 JOptionPane.WARNING_MESSAGE);
             return false;
         }
@@ -146,50 +146,38 @@ public class Validation {
         if (centuryDigit >= 0 && centuryDigit <= 5) {
             fullYear = 1900 + year;
             if (year < 25) {
-                errors.add("Invalid year for the 20th century.");
+                errors.add("In ID driver:Invalid year for the 20th century.");
             }
         } else if (centuryDigit >= 6 && centuryDigit <= 8) {
             fullYear = 2000 + year;
             if (year > 25) {
-                errors.add("Invalid year for the 21st century.");
+                errors.add("In ID driver:Invalid year for the 21st century.");
             }
         } else {
-            errors.add("Invalid century digit.");
+            errors.add("In ID driver:Invalid century digit.");
         }
         if (month < 1 || month > 12) {
-            errors.add("Month must be between 1 and 12.");
+            errors.add("In ID driver:Month must be between 1 and 12.");
         }
         if (day < 1 || day > 31) {
-            errors.add("Day must be between 1 and 31.");
+            errors.add("In ID driver:Day must be between 1 and 31.");
         }
         // Months with 30 days
         if (month != 2) {
             if ((month < 8 && month % 2 == 0 && day > 30) ||
                 (month > 7 && month % 2 != 0 && day > 30)) {
-                errors.add("This month only has 30 days.");
+                errors.add("In ID driver:This month only has 30 days.");
             }
         }
         // February and leap year
         if (month == 2) {
             boolean leap = (fullYear % 4 == 0 && (fullYear % 100 != 0 || fullYear % 400 == 0));
             if ((leap && day > 29) || (!leap && day > 28)) {
-                errors.add("Invalid day for February in the given year.");
+                errors.add("In ID driver:Invalid day for February in the given year.");
             }
         }
         }
         return errors;
-    }
-    public boolean validateExaminer(String user,String pass) {
-    	return (user.equalsIgnoreCase("examiner") && pass.equalsIgnoreCase("examiner")) ? true : false;
-    }
-    public boolean validateAdmin(String user,String pass) {
-    	return (user.equalsIgnoreCase("admin") && pass.equalsIgnoreCase("admin")) ? true : false;
-    }
-    public boolean validateManager(String user,String pass) {
-    	return (user.equalsIgnoreCase("manager") && pass.equalsIgnoreCase("manager")) ? true : false;
-    }
-    public boolean validateSupervisor(String user,String pass) {
-    	return (user.equalsIgnoreCase("supervisor") && pass.equalsIgnoreCase("supervisor")) ? true : false;
     }
         
 }

@@ -1,14 +1,33 @@
 package visual.Reports;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+<<<<<<< Updated upstream
 import java.util.HashMap;
 import model.Violation;
 import services.ViolationService;
 
+=======
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+
+import model.Violation;
+import services.ViolationService;
+
+>>>>>>> Stashed changes
 /**
  * Report: Consolidated Infractions by Type in a Year.
  * Shows, for a selected year, the total number of infractions, total points deducted,

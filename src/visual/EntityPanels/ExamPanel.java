@@ -1,15 +1,25 @@
 package visual.EntityPanels;
 
-import model.Exam;
-import services.ExamService;
-import visual.Buttons.NewExamenButton;
-
-import javax.swing.*;
-import org.jdesktop.swingx.JXDatePicker;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
 import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+
+import org.jdesktop.swingx.JXDatePicker;
+
+import model.Exam;
+import services.ExamService;
+import visual.Buttons.NewExamenButton;
 
 public class ExamPanel extends AbstractEntityPanel<Exam> {
     private static final long serialVersionUID = 1L;
@@ -20,7 +30,7 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
     private JButton filterButton;
     private JButton clearFilterButton;
 
-    public ExamPanel(String rol) {
+    public ExamPanel() {
         super(new ExamService(), new String[]{
                 "Code", "Type", "Date", "Result", "Vehicle Category", "Examiner", "Entity", "Driver ID"
         });
@@ -41,7 +51,6 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
             vehicleCategoryFilterCombo.setSelectedIndex(0);
             fromDatePicker.setDate(null);
             toDatePicker.setDate(null);
-            
             refreshTable();
         });
 
@@ -79,20 +88,7 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
 
         // Put the unified panel at the top
         add(unifiedPanel, BorderLayout.NORTH);
-        
-        
-        if(rol.equalsIgnoreCase("examiner")) {
-			hideDelete();
-			hideEdit();
-		}
-		else if (rol.equalsIgnoreCase("manager")) {
-			
-		
-		}
-		else if (rol.equalsIgnoreCase("supervisor")) {
-			
-		}
-        
+
         refreshTable();
     }
 

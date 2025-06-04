@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;

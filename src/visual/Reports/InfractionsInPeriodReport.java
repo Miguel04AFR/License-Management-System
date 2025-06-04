@@ -1,18 +1,32 @@
 package visual.Reports;
 
-import javax.swing.*;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.sql.Date;
-import java.util.List;
 import java.util.ArrayList;
-import model.Violation;
-import model.License;
-import model.Driver;
-import services.ViolationService;
-import services.LicenseService;
-import services.DriverService;
+import java.util.List;
 
+<<<<<<< Updated upstream
+=======
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+
+import model.Driver;
+import model.License;
+import model.Violation;
+import services.DriverService;
+import services.LicenseService;
+import services.ViolationService;
+
+>>>>>>> Stashed changes
 /**
  * Report: Registered Infractions in a Period.
  * Shows infractions registered in a given period, ordered by infraction date.
