@@ -13,10 +13,10 @@ import utils.ConnectionManager;
 
 public class DriverService implements EntityService<Driver>{
 
-    // Create (Incluye driver_id)
+    @Override
     public boolean create(Driver driver) {
-    	String sql = "INSERT INTO driver (driver_id, first_name, last_name, birth_date, address, phone_number, email, license_status) "
-    	           + "VALUES (?, ?, ?, ?, ?, ?, ?, ?::license_status)";
+        String sql = "INSERT INTO driver (driver_id, first_name, last_name, birth_date, address, phone_number, email, license_status) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?::license_status)";
         
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -25,8 +25,7 @@ public class DriverService implements EntityService<Driver>{
             return pstmt.executeUpdate() > 0;
             
         } catch (SQLException e) {
-            handleSQLException("Error creating driver", e);
-            return false;
+            throw new RuntimeException("Error creating driver", e); // Encapsula la excepción
         }
     }
 

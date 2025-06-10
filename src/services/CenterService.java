@@ -109,16 +109,16 @@ public class CenterService  implements EntityService<Center>{
 
     // Métodos auxiliares
     private void setCenterParameters(PreparedStatement pstmt, Center center) throws SQLException {
-        pstmt.setString(1, center.getCenterCode());
-        pstmt.setString(2, center.getCenterName());
-        pstmt.setString(3, center.getPostalAddress());
-        pstmt.setString(4, center.getPhoneNumber());
-        pstmt.setString(5, center.getGeneralDirector());
-        pstmt.setString(6, center.getHrManager());
-        pstmt.setString(7, center.getAccountingManager());
-        pstmt.setString(8, center.getUnionSecretary());
-        pstmt.setBytes(9, center.getLogo());
-        pstmt.setString(10, center.getContactEmail());
+        pstmt.setString(1, center.getCenterName());
+        pstmt.setString(2, center.getPostalAddress());
+        pstmt.setString(3, center.getPhoneNumber());
+        pstmt.setString(4, center.getGeneralDirector());
+        pstmt.setString(5, center.getHrManager());
+        pstmt.setString(6, center.getAccountingManager());
+        pstmt.setString(7, center.getUnionSecretary());
+        pstmt.setBytes(8, center.getLogo());
+        pstmt.setString(9, center.getContactEmail());
+      
     }
 
     private Center mapResultSetToCenter(ResultSet rs) throws SQLException {

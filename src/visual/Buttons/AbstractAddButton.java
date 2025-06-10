@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 public abstract class AbstractAddButton extends JButton {
@@ -18,7 +19,13 @@ public abstract class AbstractAddButton extends JButton {
         configureButton();
         addActionListener(new ButtonActionListener());
     }
-
+protected void handleException(Exception e, String userMessage) {
+    JOptionPane.showMessageDialog(parentFrame,
+        userMessage + "\nDetails: " + e.getMessage(),
+        "Error",
+        JOptionPane.ERROR_MESSAGE);
+    e.printStackTrace(); // Log the exception for debugging
+}
     private void configureButton() {
         this.setFocusable(false);
         this.setIcon(UIManager.getIcon("OptionPane.informationIcon"));

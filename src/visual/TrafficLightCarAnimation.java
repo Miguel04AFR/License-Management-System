@@ -16,6 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import model.Center;
+import services.CenterService;
+
 /**
  * Splash animation: logo in the sky, a car waits at a red traffic light, then moves when the light turns green,
  * and finally launches the main app window.
@@ -52,13 +55,8 @@ public class TrafficLightCarAnimation extends JFrame {
             this.parent = parent;
             setBackground(new Color(230, 243, 255));
 
-            // Try load the logo (adjust the path as needed)
-            logoImage = null;
-            try {
-                logoImage = new ImageIcon(getClass().getResource("/visual/logo_en.png")).getImage();
-            } catch (Exception e) {
-                // fallback: logo not found
-            }
+            // Load the logo from the database
+            loadLogoFromDatabase();
 
             timer = new Timer(40, new ActionListener() {
                 @Override
@@ -67,6 +65,21 @@ public class TrafficLightCarAnimation extends JFrame {
                 }
             });
             timer.start();
+        }
+
+        private void loadLogoFromDatabase() {
+            CenterService centerService = new CenterService();
+            Center center = centerService.getAll().stream().findFirst().orElse(null);
+
+            if (center != null && center.getLogo() != null) {
+                try {
+                    logoImage = new ImageIcon(center.getLogo()).getImage();
+                } catch (Exception e) {
+                    System.err.println("Error loading logo from database: " + e.getMessage());
+                }
+            } else {
+                System.err.println("No logo found in the database.");
+            }
         }
 
         private void onTick() {
@@ -175,4 +188,4 @@ public class TrafficLightCarAnimation extends JFrame {
             g2d.fillOval(x + (2 * w / 3), y, w, h);
         }
     }
-} 
+}

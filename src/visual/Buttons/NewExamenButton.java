@@ -171,27 +171,69 @@ public class NewExamenButton extends AbstractAddButton {
         return Validation.showErrors(parentFrame, errors);
     }
 
+
     @Override
     protected void saveToDatabase() {
-        Exam exam = new Exam();
-        exam.setExamCode(txtExamCode.getText().trim());
-        exam.setExamType((String) cmbExamType.getSelectedItem());
-        exam.setExamDate(new Date(datePicker.getDate().getTime()));
-        exam.setResult((String) cmbResult.getSelectedItem());
-        exam.setVehicleCategory((String) cmbVehicleCategory.getSelectedItem()); // NEW FIELD
-        exam.setExaminerName(txtExaminerName.getText().trim());
-        exam.setEntityCode(txtEntityCode.getText().trim());
-        exam.setDriverId(txtDriverId.getText().trim());
-
-        boolean ok = new ExamService().create(exam);
-
-        if (ok) {
-            JOptionPane.showMessageDialog(parentFrame, "Exam successfully registered.");
-        } else {
-            JOptionPane.showMessageDialog(parentFrame, "Error registering exam.", "Error", JOptionPane.ERROR_MESSAGE);
+        boolean success = false; // Variable para rastrear si el guardado fue exitoso
+        try {
+            // Crear un nuevo objeto Exam con los datos del formulario
+            Exam exam = new Exam();
+            exam.setExamCode(txtExamCode.getText().trim());
+            exam.setExamType((String) cmbExamType.getSelectedItem());
+            exam.setExamDate(new Date(datePicker.getDate().getTime()));
+            exam.setResult((String) cmbResult.getSelectedItem());
+            exam.setVehicleCategory((String) cmbVehicleCategory.getSelectedItem());
+            exam.setExaminerName(txtExaminerName.getText().trim());
+            exam.setEntityCode(txtEntityCode.getText().trim());
+            exam.setDriverId(txtDriverId.getText().trim());
+    
+            // Llamar al servicio para guardar el examen
+            boolean ok = new ExamService().create(exam);
+    
+            if (ok) {
+                JOptionPane.showMessageDialog(parentFrame, "Exam successfully registered.");
+                success = true; // Guardado exitoso
+            } else {
+                JOptionPane.showMessageDialog(parentFrame, "Error registering exam.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+    
+        } catch (RuntimeException e) {
+            // Manejar errores específicos de la base de datos
+            Throwable cause = e.getCause();
+            if (cause instanceof java.sql.SQLException) {
+                java.sql.SQLException sqlEx = (java.sql.SQLException) cause;
+    
+                // Manejar violación de clave foránea (código SQLState 23503 en PostgreSQL)
+                if ("23503".equals(sqlEx.getSQLState())) {
+                    JOptionPane.showMessageDialog(parentFrame,
+                        "The associated entity code or driver ID does not exist. Please verify.",
+                        "Foreign Key Violation",
+                        JOptionPane.ERROR_MESSAGE);
+                    return; // No cerrar el formulario
+                }
+    
+                // Manejar violación de clave primaria (código SQLState 23505 en PostgreSQL)
+                if ("23505".equals(sqlEx.getSQLState())) {
+                    JOptionPane.showMessageDialog(parentFrame,
+                        "An exam with the same code already exists. Please use a different code.",
+                        "Duplicate Key Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    return; // No cerrar el formulario
+                }
+            }
+    
+            // Otros errores inesperados
+            JOptionPane.showMessageDialog(parentFrame,
+                "An unexpected error occurred: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    
+        // Cerrar la ventana solo si el guardado fue exitoso
+        if (success) {
+            parentFrame.dispose();
         }
     }
-
     private void addFormField(JPanel panel, String label, JComponent field) {
         panel.add(new JLabel(label));
         panel.add(field);
