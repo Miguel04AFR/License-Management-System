@@ -7,6 +7,8 @@ import visual.Reports.DriverInfoReport;
 import visual.Reports.EntityInfoReport;
 import visual.Reports.ExamsInPeriodReport;
 import visual.Reports.ExpiredLicensesReport;
+import visual.Reports.InfractionsInPeriodReport;
+import visual.Reports.LicensesIssuedReport;
 
 import java.awt.*;
 
