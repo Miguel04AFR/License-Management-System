@@ -1,11 +1,12 @@
 package visual;
 
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import java.awt.event.ActionEvent;
 
-
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 
@@ -22,6 +23,7 @@ import visual.EntityPanels.AssociatedEntityPanel;
 import visual.EntityPanels.DriverPanel;
 import visual.EntityPanels.ExamPanel;
 import visual.EntityPanels.LicensePanel;
+import visual.EntityPanels.UserPanel;
 import visual.EntityPanels.ViolationPanel;
 import visual.Reports.ReportPanel;
 
@@ -94,15 +96,25 @@ public class LicenseManagementUI extends JFrame {
 		if(rol.equalsIgnoreCase("admin")) {
 		JMenuItem centerConfig = new JMenuItem("Center configuration");
 		JMenuItem addRol = new JMenuItem("Add Rol");
+		JMenuItem users = new JMenuItem("Users");
 		centerConfig.addActionListener(e -> CenterInfoPanel.showEditableDialog(this));
 		addRol.addActionListener(e -> {
 		    AddRol ventanaRol = new AddRol(); // Crear la instancia del JFrame
 		    ventanaRol.setLocationRelativeTo(null);
 		    ventanaRol.setVisible(true);      // Mostrarla en pantalla
 		});
+		users.addActionListener(e -> {
+			JDialog userDialog = new JDialog(this, "User Management", true);
+			userDialog.setSize(800, 600);
+			userDialog.setLayout(new BorderLayout());
+			userDialog.add(BorderLayout.CENTER, new UserPanel());
+			userDialog.setLocationRelativeTo(this);
+			userDialog.setVisible(true);
+		});
 		settingsMenu.add(themeAdmin);
 		themeAdmin.add(centerConfig);
 		themeAdmin.add(addRol);
+		themeAdmin.add(users);
 		}
 		lightTheme.addActionListener(this::toggleTheme);
 		darkTheme.addActionListener(this::toggleTheme);

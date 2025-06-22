@@ -3,6 +3,7 @@ package visual.EntityPanels;
 import model.AssociatedEntity;
 import services.AssociatedEntityService;
 import visual.Buttons.NewAssociatedEntityButton;
+import visual.Buttons.NewDriverButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,17 +68,31 @@ public class AssociatedEntityPanel extends AbstractEntityPanel<AssociatedEntity>
         add(unifiedPanel, BorderLayout.NORTH);
         
         //validation hide
-			 if(rol.equalsIgnoreCase("examiner")) {
-				hideDelete();
-				hideEdit();
-			}
-			else if (rol.equalsIgnoreCase("manager")) {
-				
+        if(rol.equalsIgnoreCase("admin")) {
+	    	
 			
-			}
-			else if (rol.equalsIgnoreCase("supervisor")) {
-				
-			}
+		} else
+		 if(rol.equalsIgnoreCase("examiner")) {
+			 hideDelete();
+				hideEdit();
+				btnAdd.setEnabled(false);
+				btnAdd.setVisible(false);
+			
+		}
+		else if (rol.equalsIgnoreCase("manager")) {
+			hideDelete();
+			hideEdit();
+			btnAdd.setEnabled(false);
+			btnAdd.setVisible(false);
+		
+		}
+		else if (rol.equalsIgnoreCase("supervisor")) {
+			hideDelete();
+			hideEdit();
+			btnAdd.setEnabled(false);
+			btnAdd.setVisible(false);
+			
+		}
         refreshTable();
     }
 
@@ -203,7 +218,8 @@ public class AssociatedEntityPanel extends AbstractEntityPanel<AssociatedEntity>
 
     @Override
     protected JButton createAddButton() {
-        return new NewAssociatedEntityButton(null, this::refreshTable);
+    	btnAdd= new NewAssociatedEntityButton(null, this::refreshTable);
+        return btnAdd;
     }
     
 

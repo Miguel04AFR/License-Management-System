@@ -3,6 +3,7 @@ package visual.EntityPanels;
 import model.Driver;
 import services.DriverService;
 import visual.Buttons.NewDriverButton;
+import visual.Buttons.NewViolationButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,15 +76,28 @@ public class DriverPanel extends AbstractEntityPanel<Driver> {
     		    
     		    
     		    //validation hide
-				 if(rol.equalsIgnoreCase("examiner")) {
-					hideDelete();
+    		    if(rol.equalsIgnoreCase("admin")) {
+    		    	hideDelete();
 					hideEdit();
+					btnAdd.setEnabled(false);
+					btnAdd.setVisible(false);
+					
+				} else
+				 if(rol.equalsIgnoreCase("examiner")) {
+					
 				}
 				else if (rol.equalsIgnoreCase("manager")) {
-					
+					hideDelete();
+					hideEdit();
+					btnAdd.setEnabled(false);
+					btnAdd.setVisible(false);
 				
 				}
 				else if (rol.equalsIgnoreCase("supervisor")) {
+					hideDelete();
+					hideEdit();
+					btnAdd.setEnabled(false);
+					btnAdd.setVisible(false);
 					
 				}
     		   
@@ -217,7 +231,8 @@ public class DriverPanel extends AbstractEntityPanel<Driver> {
 
     @Override
     protected JButton createAddButton() {
-        return new NewDriverButton(null, this::refreshTable);
+    	btnAdd= new NewDriverButton(null, this::refreshTable);
+        return btnAdd;
     }
     
     

@@ -81,15 +81,29 @@ public class LicensePanel extends AbstractEntityPanel<License> {
         add(unifiedPanel, BorderLayout.NORTH);
 
         
-        if(rol.equalsIgnoreCase("examiner")) {
-			hideDelete();
+        if(rol.equalsIgnoreCase("admin")) {
+        	hideDelete();
 			hideEdit();
+			btnAdd.setEnabled(false);
+			btnAdd.setVisible(false);
+		
+			
+		} else
+		 if(rol.equalsIgnoreCase("examiner")) {
+			 hideDelete();
+				hideEdit();
+				btnAdd.setEnabled(false);
+				btnAdd.setVisible(false);
+			
 		}
 		else if (rol.equalsIgnoreCase("manager")) {
 			
-		
 		}
 		else if (rol.equalsIgnoreCase("supervisor")) {
+			hideDelete();
+			hideEdit();
+			btnAdd.setEnabled(false);
+			btnAdd.setVisible(false);
 			
 		}
         

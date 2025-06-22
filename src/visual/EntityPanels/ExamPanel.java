@@ -83,17 +83,25 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
         if(rol.equalsIgnoreCase("admin")){
         	hideDelete();
 			hideEdit();
-			btnAdd.setVisible(false); // Hide the add button for admin
+			btnAdd.setVisible(false);
+			btnAdd.setEnabled(false);
+			
         }else
         if(rol.equalsIgnoreCase("examiner")) {
-			hideDelete();
-			hideEdit();
+			
 		}
 		else if (rol.equalsIgnoreCase("manager")) {
-			
+			hideDelete();
+			hideEdit();
+			btnAdd.setVisible(false);
+			btnAdd.setEnabled(false);
 		
 		}
 		else if (rol.equalsIgnoreCase("supervisor")) {
+			btnAdd.setVisible(false);
+			btnAdd.setEnabled(false);
+			hideDelete();
+			hideEdit();
 			
 		}
         

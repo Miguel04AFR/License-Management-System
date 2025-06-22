@@ -20,7 +20,7 @@ public class UserService implements EntityService<User>  {
 	public List<User> getAll() {
 
 		List<User> lista = new ArrayList<>();
-		String sql = "SELECT Name_user , password , Rols FROM \"User\" u JOIN \"Rols\" r ON u.Name_User = r.Name_User_rols";
+		String sql = "SELECT name_user , password , rols FROM \"user\" u JOIN \"rols\" r ON u.name_User = r.name_user_rols";
 		Connection conn;
 		 
 		try {

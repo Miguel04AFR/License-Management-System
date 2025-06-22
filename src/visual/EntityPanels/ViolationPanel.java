@@ -2,6 +2,7 @@ package visual.EntityPanels;
 
 import model.Violation;
 import services.ViolationService;
+import visual.Buttons.NewLicenseButton;
 import visual.Buttons.NewViolationButton;
 
 import javax.swing.*;
@@ -73,15 +74,29 @@ public class ViolationPanel extends AbstractEntityPanel<Violation> {
         add(unifiedPanel, BorderLayout.NORTH);
 
         
-        if(rol.equalsIgnoreCase("examiner")) {
-			hideDelete();
+        if(rol.equalsIgnoreCase("admin")) {
+        	hideDelete();
 			hideEdit();
+			btnAdd.setEnabled(false);
+			btnAdd.setVisible(false);
+		
+			
+		} else
+		 if(rol.equalsIgnoreCase("examiner")) {
+			 hideDelete();
+				hideEdit();
+				btnAdd.setEnabled(false);
+				btnAdd.setVisible(false);
+			
 		}
 		else if (rol.equalsIgnoreCase("manager")) {
 			
-		
 		}
 		else if (rol.equalsIgnoreCase("supervisor")) {
+			hideDelete();
+			hideEdit();
+			btnAdd.setEnabled(false);
+			btnAdd.setVisible(false);
 			
 		}
         
@@ -218,7 +233,7 @@ public class ViolationPanel extends AbstractEntityPanel<Violation> {
 
     @Override
     protected JButton createAddButton() {
-    	
-        return new NewViolationButton(null, this::refreshTable);
+    	btnAdd= new NewViolationButton(null, this::refreshTable);
+        return btnAdd;
     }
 }
