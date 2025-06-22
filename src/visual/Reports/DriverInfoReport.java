@@ -7,9 +7,14 @@ import java.util.List;
 import model.Driver;
 import model.License;
 import model.Violation;
+import report_models.ConsolidatedInfractionsReportModel;
+import report_models.DriverInfoReportModel;
 import services.DriverService;
 import services.LicenseService;
 import services.ViolationService;
+
+import static report_models.DriverInfoReportModel.saveDriverInfoReport;
+import static report_models.SaveLocation.askSaveLocation;
 
 /**
  * Report: Driver Information Sheet.
@@ -39,9 +44,11 @@ public class DriverInfoReport extends JPanel {
         List<License> licenses = licenseService.getLicensesByDriver(driverId.trim());
 
         // License status: example logic - show the first license status found (improve as needed)
-        String licenseStatus = "No licenses";
+        String licenseStatus;
         if (!licenses.isEmpty()) {
             licenseStatus = licenses.get(0).getLicenseType() + " (" + licenses.get(0).getLicenseCode() + ")";
+        }else{
+            licenseStatus = "No licenses";
         }
 
         // Gather all violations for all licenses
@@ -130,7 +137,27 @@ public class DriverInfoReport extends JPanel {
 
         // Export button (disabled for now)
         JButton exportButton = new JButton("Export...");
-        exportButton.setEnabled(false); // no action yet
+        exportButton.setEnabled(true);
+        exportButton.addActionListener(e -> {
+            try {
+                String filePath = askSaveLocation(dialog);
+                if (filePath != null&&!filePath.trim().isEmpty()) {
+                    saveDriverInfoReport(
+                            filePath,
+                            fullName,
+                            driverId,
+                            address,
+                            phone,
+                            licenseStatus,
+                            licenses,
+                            allViolations
+                    );
+                    JOptionPane.showMessageDialog(dialog, "Report exported successfully!", "Export PDF", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error generating report: " + ex.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(exportButton);
 

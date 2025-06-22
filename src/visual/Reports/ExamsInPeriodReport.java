@@ -14,6 +14,10 @@ import services.ExamService;
 import services.DriverService;
 import services.AssociatedEntityService;
 
+import static report_models.EntityInfoReportModel.saveEntityInfoReport;
+import static report_models.ExamsInPeriodReportModel.saveExamsInPeriod;
+import static report_models.SaveLocation.askSaveLocation;
+
 /**
  * Report: Exams Taken in a Period.
  * Shows exams taken in a time period, ordered by exam date.
@@ -88,9 +92,20 @@ public class ExamsInPeriodReport extends JPanel {
 
         dialog.add(tablePanel, BorderLayout.CENTER);
 
-        // Export button (disabled for now)
+
         JButton exportButton = new JButton("Export...");
-        exportButton.setEnabled(false); // no action yet
+        exportButton.setEnabled(true);
+        exportButton.addActionListener(e -> {
+            try {
+                String filePath = askSaveLocation(dialog);
+                if (filePath != null&&!filePath.trim().isEmpty()) {
+                    saveExamsInPeriod(table, columns, filePath);
+                    JOptionPane.showMessageDialog(dialog, "Report exported successfully!", "Export PDF", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error generating report: " + ex.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(exportButton);
 

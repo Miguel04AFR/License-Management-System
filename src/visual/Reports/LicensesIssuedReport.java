@@ -11,6 +11,10 @@ import model.Driver;
 import services.LicenseService;
 import services.DriverService;
 
+import static report_models.InfractionsInPeriodReportModel.saveInfractionsInPeriod;
+import static report_models.LicensesIssuedReportModel.saveLicensesIssuedReport;
+import static report_models.SaveLocation.askSaveLocation;
+
 /**
  * Report: Licenses Issued in a Period.
  * Shows licenses issued in a time period, ordered by issue date.
@@ -82,9 +86,19 @@ public class LicensesIssuedReport extends JPanel {
 
         dialog.add(tablePanel, BorderLayout.CENTER);
 
-        // Export button (disabled for now)
         JButton exportButton = new JButton("Export...");
-        exportButton.setEnabled(false); // no action yet
+        exportButton.setEnabled(true);
+        exportButton.addActionListener(e -> {
+            try {
+                String filePath = askSaveLocation(dialog);
+                if (filePath != null&&!filePath.trim().isEmpty()) {
+                    saveLicensesIssuedReport(new java.io.File(filePath), columns, rows);
+                    JOptionPane.showMessageDialog(dialog, "Report exported successfully!", "Export PDF", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error generating report: " + ex.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(exportButton);
 

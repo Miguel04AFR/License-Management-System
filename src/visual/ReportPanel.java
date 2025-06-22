@@ -9,6 +9,7 @@ import visual.Reports.ExamsInPeriodReport;
 import visual.Reports.ExpiredLicensesReport;
 import visual.Reports.InfractionsInPeriodReport;
 import visual.Reports.LicensesIssuedReport;
+import visual.Reports.ConsolidatedInfractionsReport;
 
 import java.awt.*;
 
