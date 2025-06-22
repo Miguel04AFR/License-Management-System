@@ -2,6 +2,7 @@ package visual.EntityPanels;
 
 import model.License;
 import services.LicenseService;
+import visual.Buttons.NewExamenButton;
 import visual.Buttons.NewLicenseButton;
 
 import javax.swing.*;
@@ -230,6 +231,7 @@ public class LicensePanel extends AbstractEntityPanel<License> {
 
     @Override
     protected JButton createAddButton() {
-        return new NewLicenseButton(null, this::refreshTable);
+    	btnAdd= new NewLicenseButton(null, this::refreshTable);
+        return btnAdd;
     }
 }

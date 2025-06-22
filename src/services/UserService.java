@@ -186,5 +186,21 @@ public class UserService implements EntityService<User>  {
        
         return user;
     }
+	
+	public boolean exist(String nombreUsuario) {
+	    String sql = "SELECT 1 FROM \"user\" WHERE name_user = ?";
+	    try (Connection conn = ConnectionManager.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	        pstmt.setString(1, nombreUsuario);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        return rs.next(); // Devuelve true si encuentra un resultado
+
+	    } catch (SQLException e) {
+	        handleSQLException("Error verificando existencia del usuario", e);
+	        return false; // o true, dependiendo de si prefieres prevenir inserciones si hay error
+	    }
+	}
 
 }

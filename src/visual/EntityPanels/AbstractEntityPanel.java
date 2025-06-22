@@ -15,7 +15,9 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
     protected DefaultTableModel model;
     protected JButton btnEdit;
     protected JButton btnDelete;
+    protected JButton btnAdd;
     protected String user;
+    protected String r;
 
     public AbstractEntityPanel(EntityService<T> service, String[] columns) {
         this.service = service;
@@ -36,7 +38,7 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
     // Toolbar generalizada
     private JToolBar createToolbar() {
         JToolBar toolbar = new JToolBar();
-        JButton btnAdd = createAddButton();
+         btnAdd = createAddButton();
          btnEdit = new JButton("Edit");
          btnDelete = new JButton("Delete");
 
@@ -50,7 +52,7 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
     }
 
     // Permite que cada subclase devuelva el botón adecuado (por ejemplo, NewDriverButton, etc.)
-    protected abstract JButton createAddButton();
+    protected abstract  JButton  createAddButton();
 
     // Lógica generalizada de refresco
     public void refreshTable() {
@@ -114,6 +116,8 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
     	getBtnEdit().setVisible(false);
     	getBtnEdit().setEnabled(false);
     }
+	
+
 
 	// Deben implementarse en subclases:
     protected abstract Object[] getRowData(T entity);

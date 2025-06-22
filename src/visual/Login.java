@@ -169,7 +169,15 @@ public class Login extends JFrame {
         			l.setVisible(true);
         			dispose();
         			
-        		}
+        		}else {
+        		 javax.swing.JOptionPane.showMessageDialog(
+        		            null,
+        		            "Credenciales incorrectas.",
+        		            "Error de Autenticación",
+        		            javax.swing.JOptionPane.ERROR_MESSAGE
+        		        );
+        		    }
+        		
         		
         	}
         });

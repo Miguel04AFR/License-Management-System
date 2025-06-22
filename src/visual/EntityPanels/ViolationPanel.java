@@ -218,6 +218,7 @@ public class ViolationPanel extends AbstractEntityPanel<Violation> {
 
     @Override
     protected JButton createAddButton() {
+    	
         return new NewViolationButton(null, this::refreshTable);
     }
 }

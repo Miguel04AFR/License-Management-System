@@ -27,6 +27,8 @@ import javax.swing.border.EmptyBorder;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
+import model.User;
+import services.UserService;
 import utils.Validation;
 import visual.Buttons.ModernButton;
 import visual_utils.AvatarCircular;
@@ -48,6 +50,7 @@ public class AddRol extends JFrame {
     private JPasswordField passwordField_3;
     private JLayeredPane paneles;
     private Validation validation;
+    private UserService userService;
 
     /**
      * Launch the application.
@@ -72,11 +75,11 @@ public class AddRol extends JFrame {
     public AddRol() {
     	FlatDarkLaf.setup();
 		validation = new Validation();
-
+		userService = new UserService();
     	setTitle("ADD-ROL");
     	setResizable(false);
 		setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 830, 608);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -150,7 +153,7 @@ public class AddRol extends JFrame {
 			}
 		});
 
-        JMenu mnNewMenu_3 = new JMenu("Gestor");
+        JMenu mnNewMenu_3 = new JMenu("Manager");
         mnNewMenu_3.setHorizontalAlignment(SwingConstants.CENTER);         
         mnNewMenu_3.setHorizontalTextPosition(SwingConstants.CENTER);
         mnNewMenu_3.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -165,7 +168,7 @@ public class AddRol extends JFrame {
 			}
 		});
 
-        JMenu mnNewMenu_4 = new JMenu("Examinador");
+        JMenu mnNewMenu_4 = new JMenu("Examiner");
         mnNewMenu_4.setHorizontalAlignment(SwingConstants.CENTER);         
         mnNewMenu_4.setHorizontalTextPosition(SwingConstants.CENTER);
         mnNewMenu_4.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -231,14 +234,17 @@ public class AddRol extends JFrame {
         ModernButton mdrnbtnAceptar = new ModernButton("Aceptar");
         mdrnbtnAceptar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if (validation.validateAdmin(textField.getText(), new String(passwordField.getPassword()))) {
-					LicenseManagementUI l = new LicenseManagementUI("admin");
-					l.setVisible(true);
-					SwingUtilities.getWindowAncestor(admin).dispose();
+        		if(!userService.exist(textField.getText())) {
+					User u=new User();
+					u.setNombre(textField.getText());
+					u.setContra(new String(passwordField.getPassword()));
+					u.setRol("admin");
+					userService.create(u);
         	    } else {
         	        // Mostrar mensaje de usuario incorrecto
-        	        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        	        JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error de validación", JOptionPane.ERROR_MESSAGE);
         	    }
+        		
         		
         		
         	}
@@ -286,7 +292,7 @@ public class AddRol extends JFrame {
         additionalImage_2.setBounds(10, 39, 233, 277);
         gestor.add(additionalImage_2);
         
-        JLabel lblGestorPrincipal = new JLabel("Gestor principal");
+        JLabel lblGestorPrincipal = new JLabel("Manager");
         lblGestorPrincipal.setHorizontalAlignment(SwingConstants.CENTER);
         lblGestorPrincipal.setFont(new Font("Segoe UI Black", Font.BOLD, 33));
         lblGestorPrincipal.setBounds(143, 14, 482, 45);
@@ -300,13 +306,15 @@ public class AddRol extends JFrame {
         ModernButton mdrnbtnAceptar_1 = new ModernButton("Aceptar");
         mdrnbtnAceptar_1.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if (validation.validateManager(textField_1.getText(), new String(passwordField_1.getPassword()))) {
-					LicenseManagementUI l = new LicenseManagementUI("manager");
-					l.setVisible(true);
-					SwingUtilities.getWindowAncestor(gestor).dispose();
+        		if(!userService.exist(textField_1.getText())) {
+					User u=new User();
+					u.setNombre(textField_1.getText());
+					u.setContra(new String(passwordField_1.getPassword()));
+					u.setRol("manager");
+					userService.create(u);
         	    } else {
         	        // Mostrar mensaje de usuario incorrecto
-        	        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        	        JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error de validación", JOptionPane.ERROR_MESSAGE);
         	    }
         		
         		
@@ -354,7 +362,7 @@ public class AddRol extends JFrame {
         additionalImage_3.setBounds(10, 39, 233, 277);
         examinador.add(additionalImage_3);
         
-        JLabel lblNewLabel_3 = new JLabel("Examinador");
+        JLabel lblNewLabel_3 = new JLabel("Examiner");
         lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
         lblNewLabel_3.setFont(new Font("Segoe UI Black", Font.BOLD, 33));
         lblNewLabel_3.setBounds(143, 14, 482, 45);
@@ -368,13 +376,16 @@ public class AddRol extends JFrame {
         ModernButton mdrnbtnAceptar_2 = new ModernButton("Aceptar");
         mdrnbtnAceptar_2.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if (validation.validateExaminer(textField_2.getText(), new String(passwordField_2.getPassword()))) {
-					LicenseManagementUI l = new LicenseManagementUI("examiner");
-					l.setVisible(true);
-					SwingUtilities.getWindowAncestor(examinador).dispose();
+        		
+				if(!userService.exist(textField_2.getText())) {
+					User u=new User();
+					u.setNombre(textField_2.getText());
+					u.setContra(new String(passwordField_2.getPassword()));
+					u.setRol("examiner");
+					userService.create(u);
         	    } else {
         	        // Mostrar mensaje de usuario incorrecto
-        	        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        	        JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error de validación", JOptionPane.ERROR_MESSAGE);
         	    }
         		
         	}
@@ -435,13 +446,15 @@ public class AddRol extends JFrame {
         ModernButton mdrnbtnAceptar_3 = new ModernButton("Aceptar");
         mdrnbtnAceptar_3.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		if (validation.validateAdmin(textField_3.getText(), new String(passwordField_3.getPassword()))) {
-					LicenseManagementUI l = new LicenseManagementUI("supervisor");
-					l.setVisible(true);
-					SwingUtilities.getWindowAncestor(supervisor).dispose();
+        		if(!userService.exist(textField_3.getText())) {
+					User u=new User();
+					u.setNombre(textField_3.getText());
+					u.setContra(new String(passwordField_3.getPassword()));
+					u.setRol("supervisor");
+					userService.create(u);
         	    } else {
         	        // Mostrar mensaje de usuario incorrecto
-        	        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        	        JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error de validación", JOptionPane.ERROR_MESSAGE);
         	    }
         		
         	}

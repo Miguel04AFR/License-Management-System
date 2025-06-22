@@ -74,7 +74,9 @@ public class TrafficLightCarAnimation extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     parent.dispose();
                     EventQueue.invokeLater(() -> {
-                        new Login().setVisible(true);
+                        Login l =new Login();
+                        l.setLocationRelativeTo(null);
+                        l.setVisible(true);
                     });
                 });
             }

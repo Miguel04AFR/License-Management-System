@@ -21,6 +21,7 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
     private JButton clearFilterButton;
 
     public ExamPanel(String rol) {
+    	
         super(new ExamService(), new String[]{
                 "Code", "Type", "Date", "Result", "Vehicle Category", "Examiner", "Entity", "Driver ID"
         });
@@ -41,7 +42,6 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
             vehicleCategoryFilterCombo.setSelectedIndex(0);
             fromDatePicker.setDate(null);
             toDatePicker.setDate(null);
-            
             refreshTable();
         });
 
@@ -80,7 +80,11 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
         // Put the unified panel at the top
         add(unifiedPanel, BorderLayout.NORTH);
         
-        
+        if(rol.equalsIgnoreCase("admin")){
+        	hideDelete();
+			hideEdit();
+			btnAdd.setVisible(false); // Hide the add button for admin
+        }else
         if(rol.equalsIgnoreCase("examiner")) {
 			hideDelete();
 			hideEdit();
@@ -94,6 +98,7 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
 		}
         
         refreshTable();
+        r = rol; // Store the role for later use
     }
 
     private List<Exam> applyFilters(List<Exam> exams) {
@@ -237,6 +242,7 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
 
     @Override
     protected JButton createAddButton() {
-        return new NewExamenButton(null, this::refreshTable);
+    	btnAdd= new NewExamenButton(null, this::refreshTable);
+        return btnAdd;
     }
 }

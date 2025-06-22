@@ -29,6 +29,7 @@ import visual.Reports.ReportPanel;
 public class LicenseManagementUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private boolean darkMode = false;
+	public static String rOl;
 
 	public LicenseManagementUI(String rol) {
 		initializeUI(rol);
@@ -53,6 +54,7 @@ public class LicenseManagementUI extends JFrame {
 		}
 	}
 	private void createMainUI(String rol) {
+		rOl=rol;
 		setTitle("Driver License Management System");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1280, 720);
@@ -95,6 +97,7 @@ public class LicenseManagementUI extends JFrame {
 		centerConfig.addActionListener(e -> CenterInfoPanel.showEditableDialog(this));
 		addRol.addActionListener(e -> {
 		    AddRol ventanaRol = new AddRol(); // Crear la instancia del JFrame
+		    ventanaRol.setLocationRelativeTo(null);
 		    ventanaRol.setVisible(true);      // Mostrarla en pantalla
 		});
 		settingsMenu.add(themeAdmin);
