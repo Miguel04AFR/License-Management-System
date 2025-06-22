@@ -27,7 +27,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-
+import utils.ENCRIPTADOR;
 import model.User;
 import services.UserService;
 import utils.Validation;
@@ -52,11 +52,13 @@ public class AddRol extends JFrame {
     private JLayeredPane paneles;
     private Validation validation;
     private UserService userService;
+    private ENCRIPTADOR enc; 
 
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
+    	
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -84,7 +86,7 @@ public class AddRol extends JFrame {
         setBounds(100, 100, 830, 608);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
+        enc = new ENCRIPTADOR();
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
@@ -237,8 +239,9 @@ public class AddRol extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		if(!userService.exist(textField.getText())) {
 					User u=new User();
+					String cifrada = ENCRIPTADOR.encripta(new String(passwordField.getPassword()));
 					u.setNombre(textField.getText());
-					u.setContra(new String(passwordField.getPassword()));
+					u.setContra(cifrada);
 					u.setRol("admin");
 					if (userService.create(u)) {
 			            JOptionPane.showMessageDialog(null, "Usuario ha sido creado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -313,7 +316,7 @@ public class AddRol extends JFrame {
         		if(!userService.exist(textField_1.getText())) {
 					User u=new User();
 					u.setNombre(textField_1.getText());
-					u.setContra(new String(passwordField_1.getPassword()));
+					u.setContra(enc.encripta(new String(passwordField_1.getPassword())));
 					u.setRol("manager");
 					if (userService.create(u)) {
 			            JOptionPane.showMessageDialog(null, "Usuario ha sido creado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -387,7 +390,7 @@ public class AddRol extends JFrame {
 				if(!userService.exist(textField_2.getText())) {
 					User u=new User();
 					u.setNombre(textField_2.getText());
-					u.setContra(new String(passwordField_2.getPassword()));
+					u.setContra(enc.encripta(new String(passwordField_2.getPassword())));
 					u.setRol("examiner");
 					if (userService.create(u)) {
 			            JOptionPane.showMessageDialog(null, "Usuario ha sido creado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -459,7 +462,7 @@ public class AddRol extends JFrame {
         		if(!userService.exist(textField_3.getText())) {
 					User u=new User();
 					u.setNombre(textField_3.getText());
-					u.setContra(new String(passwordField_3.getPassword()));
+					u.setContra(enc.encripta(new String(passwordField_3.getPassword())));
 					u.setRol("supervisor");
 					if (userService.create(u)) {
 			            JOptionPane.showMessageDialog(null, "Usuario ha sido creado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);

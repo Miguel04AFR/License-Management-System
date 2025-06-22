@@ -27,6 +27,7 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import services.UserService;
+import utils.ENCRIPTADOR;
 import utils.Validation;
 import visual.Buttons.ModernButton;
 import visual_utils.ImagePanel;
@@ -37,15 +38,7 @@ public class Login extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JTextField textField;
-    private JPasswordField passwordField;
-    private JTextField textField_1;
-    private JPasswordField passwordField_1;
-    private JTextField textField_2;
-    private JPasswordField passwordField_2;
-    private JTextField textField_3;
-    private JPasswordField passwordField_3;
-    private JLayeredPane paneles;
+    private ENCRIPTADOR enc;
     private Validation validation;
 
     public static void main(String[] args) {
@@ -66,8 +59,8 @@ public class Login extends JFrame {
         FlatDarkLaf.setup();
         validation = new Validation();
 
-        setTitle("Sistema de Gestión de Licencias");
-        
+        setTitle("License-Management-System");
+        enc = new ENCRIPTADOR();
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -163,12 +156,12 @@ public class Login extends JFrame {
         mdrnbtnAceptar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		UserService usuarios = new UserService();
-        		if(usuarios.autenticar(txtUsuario.getText(),pwdContrasena.getText())) {
+        		if(usuarios.autenticar(txtUsuario.getText(),(pwdContrasena.getText()))) {
         			String rol =usuarios.getRolPorUsuario(txtUsuario.getText());
         			LicenseManagementUI l = new LicenseManagementUI(rol);
         			l.setVisible(true);
         			dispose();
-        			
+        			//enc.encripta
         		}else {
         		 javax.swing.JOptionPane.showMessageDialog(
         		            null,

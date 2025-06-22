@@ -12,6 +12,7 @@ import java.util.List;
 
 import model.User;
 import services.UserService;
+import utils.ENCRIPTADOR;
 
 public class UserPanel extends AbstractEntityPanel<User> {
     private static final long serialVersionUID = 1L;
@@ -32,7 +33,7 @@ public class UserPanel extends AbstractEntityPanel<User> {
 
     @Override
     protected Object[] getRowData(User user) {
-        return new Object[]{user.getNombre(), user.getRol(), user.getContra()};
+        return new Object[]{user.getNombre(), user.getRol(),ENCRIPTADOR.desEncripta(user.getContra())};
     }
 
     @Override
