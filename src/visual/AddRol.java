@@ -237,6 +237,7 @@ public class AddRol extends JFrame {
         ModernButton mdrnbtnAceptar = new ModernButton("Aceptar");
         mdrnbtnAceptar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		if(textField.getText().length() > 3 && passwordField.getPassword().length > 3) {
         		if(!userService.exist(textField.getText())) {
 					User u=new User();
 					String cifrada = ENCRIPTADOR.encripta(new String(passwordField.getPassword()));
@@ -253,7 +254,13 @@ public class AddRol extends JFrame {
         	    }
         		
         		
-        		
+        		}
+				else {
+					// Mostrar mensaje de error
+					JOptionPane.showMessageDialog(null,
+							"El nombre de usuario y la contraseña deben tener más de 3 caracteres.",
+							"Error de validación", JOptionPane.ERROR_MESSAGE);
+				}
         	}
         });
         mdrnbtnAceptar.setBounds(253, 460, 271, 39);
