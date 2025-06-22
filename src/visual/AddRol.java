@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -239,7 +240,10 @@ public class AddRol extends JFrame {
 					u.setNombre(textField.getText());
 					u.setContra(new String(passwordField.getPassword()));
 					u.setRol("admin");
-					userService.create(u);
+					if (userService.create(u)) {
+			            JOptionPane.showMessageDialog(null, "Usuario ha sido creado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			            SwingUtilities.getWindowAncestor((JButton) e.getSource()).dispose(); // Cierra el JFrame actual
+					}
         	    } else {
         	        // Mostrar mensaje de usuario incorrecto
         	        JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error de validación", JOptionPane.ERROR_MESSAGE);
@@ -311,7 +315,10 @@ public class AddRol extends JFrame {
 					u.setNombre(textField_1.getText());
 					u.setContra(new String(passwordField_1.getPassword()));
 					u.setRol("manager");
-					userService.create(u);
+					if (userService.create(u)) {
+			            JOptionPane.showMessageDialog(null, "Usuario ha sido creado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			            SwingUtilities.getWindowAncestor((JButton) e.getSource()).dispose(); // Cierra el JFrame actual
+					}
         	    } else {
         	        // Mostrar mensaje de usuario incorrecto
         	        JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error de validación", JOptionPane.ERROR_MESSAGE);
@@ -382,7 +389,10 @@ public class AddRol extends JFrame {
 					u.setNombre(textField_2.getText());
 					u.setContra(new String(passwordField_2.getPassword()));
 					u.setRol("examiner");
-					userService.create(u);
+					if (userService.create(u)) {
+			            JOptionPane.showMessageDialog(null, "Usuario ha sido creado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			            SwingUtilities.getWindowAncestor((JButton) e.getSource()).dispose(); // Cierra el JFrame actual
+					}
         	    } else {
         	        // Mostrar mensaje de usuario incorrecto
         	        JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error de validación", JOptionPane.ERROR_MESSAGE);
@@ -451,7 +461,10 @@ public class AddRol extends JFrame {
 					u.setNombre(textField_3.getText());
 					u.setContra(new String(passwordField_3.getPassword()));
 					u.setRol("supervisor");
-					userService.create(u);
+					if (userService.create(u)) {
+			            JOptionPane.showMessageDialog(null, "Usuario ha sido creado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			            SwingUtilities.getWindowAncestor((JButton) e.getSource()).dispose(); // Cierra el JFrame actual
+					}
         	    } else {
         	        // Mostrar mensaje de usuario incorrecto
         	        JOptionPane.showMessageDialog(null, "Este usuario ya existe.", "Error de validación", JOptionPane.ERROR_MESSAGE);

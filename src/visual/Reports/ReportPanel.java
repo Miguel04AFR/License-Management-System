@@ -166,14 +166,12 @@ public class ReportPanel extends JPanel {
         JButton showButton = new JButton("Show report");
         showButton.addActionListener(e -> showReportAction.run());
 
-        // Export button (NO FUNCIONA, solo pinta, no hace nada)
-        JButton exportButton = new JButton("Export...");
-        exportButton.setEnabled(false); // Puedes dejarlo deshabilitado o habilitado pero sin acción
+
+
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         buttonPanel.setOpaque(false);
         buttonPanel.add(showButton);
-        buttonPanel.add(exportButton);
 
         card.add(buttonPanel, BorderLayout.SOUTH);
 

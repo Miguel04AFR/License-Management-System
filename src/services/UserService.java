@@ -41,25 +41,29 @@ public class UserService implements EntityService<User>  {
 
 	@Override
 	public boolean create(User user) {
-		String sql = "INSERT INTO user (name_User,password) "
- 	           + "VALUES (?, ?)";
-		String sql1 = "INSERT INTO user (name_User,rol) "
-	 	           + "VALUES (?, ?)";
-     
-     try (Connection conn = ConnectionManager.getConnection();
-          PreparedStatement pstmt = conn.prepareStatement(sql);
-     	PreparedStatement pstmt1 = conn.prepareStatement(sql1)) 
-     {
-    	 setUserRParameters(pstmt1, user);
-    	 setUserParameters(pstmt, user);
-         return pstmt.executeUpdate() > 0 && pstmt1.executeUpdate() > 0;
-         
-     }
-     catch (SQLException e) {
-         handleSQLException("Error creating user", e);
-         return false;
-     }
- }
+	    String sqlUser = "INSERT INTO \"user\" (name_user, password) VALUES (?, ?)";
+	    String sqlRol = "INSERT INTO \"rols\" (name_user_rols, rols) VALUES (?, ?)";
+
+	    try (Connection conn = ConnectionManager.getConnection();
+	         PreparedStatement pstmtUser = conn.prepareStatement(sqlUser);
+	         PreparedStatement pstmtRol = conn.prepareStatement(sqlRol)) {
+
+	        // Insertar en tabla user
+	        pstmtUser.setString(1, user.getNombre());
+	        pstmtUser.setString(2, user.getContra());
+
+	        // Insertar en tabla rols
+	        pstmtRol.setString(1, user.getNombre());
+	        pstmtRol.setString(2, user.getRol());
+
+	        return pstmtUser.executeUpdate() > 0 && pstmtRol.executeUpdate() > 0;
+
+	    } catch (SQLException e) {
+	        handleSQLException("Error creating user", e);
+	        return false;
+	    }
+	}
+
 
 
 	@Override
