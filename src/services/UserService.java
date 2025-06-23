@@ -13,6 +13,7 @@ import model.License;
 import model.User;
 import model.User;
 import utils.ConnectionManager;
+import utils.ENCRIPTADOR;
 
 public class UserService implements EntityService<User>  {
 
@@ -124,14 +125,15 @@ public class UserService implements EntityService<User>  {
 
 
 	public boolean autenticar(String nombre,String contra) {
-		String sql = "SELECT Name_user , password , Rols FROM \"user\" u JOIN \"rols\" r ON u.Name_User = r.Name_User_rols WHERE name_user = ? AND password = ?";
+		String sql = "SELECT name_user , password , rols FROM \"user\" u JOIN \"rols\" r ON u.name_user = r.name_user_rols WHERE name_user = ? AND password = ?";
 		Connection conn;
 		 boolean devuelto = false;
 		try {
+			String codificada = ENCRIPTADOR.encripta(contra);
 			conn = ConnectionManager.getConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(sql);
 			 pstmt.setString(1, nombre);
-			 pstmt.setString(2, contra);
+			 pstmt.setString(2, codificada);
 		      ResultSet result = pstmt.executeQuery();
 		      devuelto = result.next();
 		     
