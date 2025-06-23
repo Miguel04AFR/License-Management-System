@@ -81,7 +81,6 @@ public class TrafficLightCarAnimation extends JFrame {
                 System.err.println("No logo found in the database.");
             }
         }
-
         private void onTick() {
             ticks++;
             if (ticks == 70) { // after ~2.8 seconds, turn green
@@ -98,7 +97,9 @@ public class TrafficLightCarAnimation extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     parent.dispose();
                     EventQueue.invokeLater(() -> {
-                        new LicenseManagementUI().setVisible(true);
+                        Login l =new Login();
+                        l.setLocationRelativeTo(null);
+                        l.setVisible(true);
                     });
                 });
             }
@@ -188,4 +189,4 @@ public class TrafficLightCarAnimation extends JFrame {
             g2d.fillOval(x + (2 * w / 3), y, w, h);
         }
     }
-}
+} 

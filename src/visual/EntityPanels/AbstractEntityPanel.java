@@ -1,15 +1,9 @@
 package visual.EntityPanels;
 
-import java.awt.BorderLayout;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JToolBar;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
 
 import services.EntityService;
 
@@ -19,6 +13,11 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
     protected EntityService<T> service;
     protected String[] columns;
     protected DefaultTableModel model;
+    protected JButton btnEdit;
+    protected JButton btnDelete;
+    protected JButton btnAdd;
+    protected String user;
+    protected String r;
 
     public AbstractEntityPanel(EntityService<T> service, String[] columns) {
         this.service = service;
@@ -39,9 +38,9 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
     // Toolbar generalizada
     private JToolBar createToolbar() {
         JToolBar toolbar = new JToolBar();
-        JButton btnAdd = createAddButton();
-        JButton btnEdit = new JButton("Edit");
-        JButton btnDelete = new JButton("Delete");
+         btnAdd = createAddButton();
+         btnEdit = new JButton("Edit");
+         btnDelete = new JButton("Delete");
 
         btnEdit.addActionListener(e -> handleEdit());
         btnDelete.addActionListener(e -> handleDelete());
@@ -53,7 +52,7 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
     }
 
     // Permite que cada subclase devuelva el botón adecuado (por ejemplo, NewDriverButton, etc.)
-    protected abstract JButton createAddButton();
+    protected abstract  JButton  createAddButton();
 
     // Lógica generalizada de refresco
     public void refreshTable() {
@@ -88,9 +87,41 @@ public abstract class AbstractEntityPanel<T> extends JPanel {
             service.delete(id);
             refreshTable();
         }
+        System.out.println("[DEBUG] handleDelete() invoked");
+        System.out.println("[DEBUG] selectedRow=" + row);
     }
+    
 
-    // Deben implementarse en subclases:
+
+    public JButton getBtnEdit() {
+		return btnEdit;
+	}
+
+	public void setBtnEdit(JButton btnEdit) {
+		this.btnEdit = btnEdit;
+	}
+
+	public JButton getBtnDelete() {
+		return btnDelete;
+	}
+
+	public void setBtnDelete(JButton btnDelete) {
+		this.btnDelete = btnDelete;
+	}
+	
+	protected void hideDelete() {
+    	getBtnDelete().setVisible(false);
+    	getBtnDelete().setEnabled(false);
+    }
+	
+	protected void hideEdit() {
+    	getBtnEdit().setVisible(false);
+    	getBtnEdit().setEnabled(false);
+    }
+	
+
+
+	// Deben implementarse en subclases:
     protected abstract Object[] getRowData(T entity);
     protected abstract T getEntityFromRow(int row);
     protected abstract String getEntityIdFromRow(int row);

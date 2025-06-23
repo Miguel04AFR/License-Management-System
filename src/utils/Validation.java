@@ -11,16 +11,16 @@ import javax.swing.JOptionPane;
 
 public class Validation {
     
-    // Validación de campo requerido
+    // Field validation required
     public static ArrayList<String> validateRequired(String value, String fieldName) {
         ArrayList<String> errors = new ArrayList<>();
         if (value == null || value.trim().isEmpty()) {
-            errors.add(fieldName + " es requerido");
+            errors.add(fieldName + "is required");
         }
         return errors;
     }
 
-    // Validación de formato específico
+    // Validation of specific format
     public static ArrayList<String> validateFormat(String value, String pattern, String errorMessage) {
         ArrayList<String> errors = new ArrayList<>();
         if (value != null && !value.matches(pattern)) {
@@ -29,11 +29,11 @@ public class Validation {
         return errors;
     }
 
-    // Validación de fecha mínima
+    // Validation of  minimum date
     public static ArrayList<String> validateMinimumAge(Date date, int minAge, String fieldName) {
         ArrayList<String> errors = new ArrayList<>();
         if (date == null) {
-            errors.add(fieldName + " es requerido");
+            errors.add(fieldName + " is required");
             return errors;
         }
 
@@ -42,30 +42,30 @@ public class Validation {
         Date minDate = cal.getTime();
 
         if (date.after(minDate)) {
-            errors.add("Debe tener al menos " + minAge + " años");
+            errors.add("Must have at least " + minAge + " years old");
         }
         return errors;
     }
 
-    // Validación de selección en JComboBox
+    //  Validation of selection in JComboBox
     public static ArrayList<String> validateSelection(JComboBox<?> comboBox, String fieldName) {
         ArrayList<String> errors = new ArrayList<>();
-        if (comboBox.getSelectedIndex() <= 0) { // Asume que el índice 0 es "Seleccionar..."
-            errors.add(fieldName + " debe ser seleccionado");
+        if (comboBox.getSelectedIndex() <= 0) { // Assume that index 0 is 'Select'...."
+            errors.add(fieldName + " must be selected");
         }
         return errors;
     }
 
-    // Validación de longitud
+    // Validation of length of a string
     public static ArrayList<String> validateLength(String value, int min, int max, String fieldName) {
         ArrayList<String> errors = new ArrayList<>();
         if (value != null && (value.length() < min || value.length() > max)) {
-            errors.add(fieldName + " debe tener entre " + min + " y " + max + " caracteres");
+            errors.add(fieldName + " must be between " + min + " and " + max + " caracters");
         }
         return errors;
     }
 
-    // Mostrar errores de validación
+    // Show validation erros
     public static boolean showErrors(Component parent, ArrayList<String> errors) {
         if (!errors.isEmpty()) {
             StringBuilder message = new StringBuilder("<html><b>Errors:</b><ul>");
@@ -86,31 +86,31 @@ public class Validation {
         ArrayList<String> errors = new ArrayList<>();
         
         if (email == null || email.trim().isEmpty()) {           
-                errors.add("El email es requerido");
+                errors.add("The email is required");
             return errors;
         }
         
-        // Expresión regular para validar email
+        //Regular expression to validate email
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         
         if (!email.matches(emailRegex)) {
-            errors.add("Formato de email inválido");
+            errors.add("Invalid email format");
         }
         
         return errors;
     }
 
-    // Validación de número dentro de rango
+    // Validation of number within range
     public static ArrayList<String> validateNumberRange(Number value, Number min, Number max, String fieldName) {
         ArrayList<String> errors = new ArrayList<>();
         if (value != null && (value.doubleValue() < min.doubleValue() || 
                               value.doubleValue() > max.doubleValue())) {
-            errors.add(fieldName + " debe estar entre " + min + " y " + max);
+            errors.add(fieldName + " must be between  " + min + " and " + max);
         }
         return errors;
     }
 
-    // Validación combinada
+    // Combined validation
     @SafeVarargs
     public static boolean validateAll(JComponent parent, ArrayList<String>... validationResults) {
         ArrayList<String> allErrors = new ArrayList<>();
@@ -120,7 +120,7 @@ public class Validation {
         return showErrors(parent, allErrors);
     }
 
-    //Validar id del conductor como el carnet cubano
+    //Validate the driver's ID as the license
     public static ArrayList<String> validateID(String id) {
         ArrayList<String> errors = new ArrayList<>();
 

@@ -26,7 +26,6 @@ public class ExamService implements EntityService<Exam> {
 	        throw new RuntimeException(e.getMessage(), e);
 	    }
 	}
-	
     // Read All
     public List<Exam> getAll() {
         List<Exam> exams = new ArrayList<>();
@@ -212,5 +211,123 @@ public class ExamService implements EntityService<Exam> {
             handleSQLException("Error counting practical exams", e);
         }
         return 0;
+    }
+    public boolean hasApprovedMedicalExamForCategory(String driverId, String vehicleCategory) {
+        String sql = "SELECT COUNT(*) FROM exam WHERE driver_id = ? AND exam_type = 'Medical'::exam_type AND vehicle_category = ?::vehicle_category AND result = 'Approved'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, driverId);
+            pstmt.setString(2, vehicleCategory);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error validating approved medical exam for category", e);
+        }
+        return false;
+    } 
+    public boolean hasApprovedTheoryExamForCategory(String driverId, String vehicleCategory) {
+        String sql = "SELECT COUNT(*) FROM exam WHERE driver_id = ? AND exam_type = 'Theory'::exam_type AND vehicle_category = ?::vehicle_category AND result = 'Approved'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, driverId);
+            pstmt.setString(2, vehicleCategory);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error validating approved theory exam for category", e);
+        }
+        return false;
+    }
+    public boolean isDuplicateExamTypeAndCategory(String driverId, String examType, String vehicleCategory) {
+        String sql = "SELECT COUNT(*) FROM exam WHERE driver_id = ? AND exam_type = ?::exam_type AND vehicle_category = ?::vehicle_category";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, driverId);
+            pstmt.setString(2, examType);
+            pstmt.setString(3, vehicleCategory);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error validating duplicate exam type and category", e);
+        }
+        return false;
+    }
+  
+public boolean isEntityEligibleForExamType(String entityCode, String examType) {
+    
+    if (examType.equals("Medical")) {
+        String sql = "SELECT COUNT(*) FROM associated_entity WHERE entity_code = ? AND entity_type = 'Clinic'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, entityCode);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error validating entity type for medical exam", e);
+        }
+        return false;
+    }
+
+   
+    if (examType.equals("Theory") || examType.equals("Practical")) {
+        String sql = "SELECT COUNT(*) FROM associated_entity WHERE entity_code = ? AND entity_type = 'Driving School'";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, entityCode);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error validating entity type for theory/practical exam", e);
+        }
+        return false;
+    }
+
+   
+    return false;
+}
+     public boolean existsDriverId(String driverId) {
+        String sql = "SELECT COUNT(*) FROM driver WHERE driver_id = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, driverId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error validating driver_id existence", e);
+        }
+        return false;
+    }
+    public boolean existsEntityCode(String entityCode) {
+        String sql = "SELECT COUNT(*) FROM associated_entity WHERE entity_code = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, entityCode);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Error validating entity_code existence", e);
+        }
+        return false;
     }
 }

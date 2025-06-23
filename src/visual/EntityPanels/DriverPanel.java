@@ -1,24 +1,14 @@
 package visual.EntityPanels;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.sql.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-
 import model.Driver;
 import services.DriverService;
 import visual.Buttons.NewDriverButton;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.sql.Date;
 
 public class DriverPanel extends AbstractEntityPanel<Driver> {
     private static final long serialVersionUID = 1L;
@@ -28,7 +18,7 @@ public class DriverPanel extends AbstractEntityPanel<Driver> {
     private JButton filterButton;
     private JButton clearFilterButton;
 
-    public DriverPanel() {
+    public DriverPanel(String rol) {
     	 super(new DriverService(), new String[]{
     		        "ID", "First Name", "Last Name", "Birth Date", "Address", "Phone Number", "Email", "License Status"
     		    });
@@ -45,6 +35,9 @@ public class DriverPanel extends AbstractEntityPanel<Driver> {
     		        firstNameFilterField.setText("");
     		        lastNameFilterField.setText("");
     		        licenseStatusFilterCombo.setSelectedIndex(0);
+    		        
+    		       
+    		        
     		        refreshTable();
     		    });
 
@@ -79,7 +72,34 @@ public class DriverPanel extends AbstractEntityPanel<Driver> {
     		    unifiedPanel.add(filterPanel);
 
     		    add(unifiedPanel, BorderLayout.NORTH);
-
+    		    
+    		    
+    		    //validation hide
+    		    if(rol.equalsIgnoreCase("admin")) {
+    		    	hideDelete();
+					hideEdit();
+					btnAdd.setEnabled(false);
+					btnAdd.setVisible(false);
+					
+				} else
+				 if(rol.equalsIgnoreCase("examiner")) {
+					
+				}
+				else if (rol.equalsIgnoreCase("manager")) {
+					hideDelete();
+					hideEdit();
+					btnAdd.setEnabled(false);
+					btnAdd.setVisible(false);
+				
+				}
+				else if (rol.equalsIgnoreCase("supervisor")) {
+					hideDelete();
+					hideEdit();
+					btnAdd.setEnabled(false);
+					btnAdd.setVisible(false);
+					
+				}
+    		   
     		    refreshTable();
     		}
     
@@ -210,6 +230,9 @@ public class DriverPanel extends AbstractEntityPanel<Driver> {
 
     @Override
     protected JButton createAddButton() {
-        return new NewDriverButton(null, this::refreshTable);
+    	btnAdd= new NewDriverButton(null, this::refreshTable);
+        return btnAdd;
     }
+    
+    
 }

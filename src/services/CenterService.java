@@ -107,7 +107,6 @@ public class CenterService  implements EntityService<Center>{
         }
     }
 
-    // Métodos auxiliares
     private void setCenterParameters(PreparedStatement pstmt, Center center) throws SQLException {
         pstmt.setString(1, center.getCenterName());
         pstmt.setString(2, center.getPostalAddress());
@@ -118,7 +117,8 @@ public class CenterService  implements EntityService<Center>{
         pstmt.setString(7, center.getUnionSecretary());
         pstmt.setBytes(8, center.getLogo());
         pstmt.setString(9, center.getContactEmail());
-      
+        // el parámetro 10 (centerCode) se setea aparte en el método update:
+        // pstmt.setString(10, center.getCenterCode());
     }
 
     private Center mapResultSetToCenter(ResultSet rs) throws SQLException {

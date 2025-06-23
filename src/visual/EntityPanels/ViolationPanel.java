@@ -1,24 +1,15 @@
 package visual.EntityPanels;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.sql.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-
 import model.Violation;
 import services.ViolationService;
+
 import visual.Buttons.NewViolationButton;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.sql.Date;
 
 public class ViolationPanel extends AbstractEntityPanel<Violation> {
     private static final long serialVersionUID = 1L;
@@ -28,7 +19,7 @@ public class ViolationPanel extends AbstractEntityPanel<Violation> {
     private JButton filterButton;
     private JButton clearFilterButton;
 
-    public ViolationPanel() {
+    public ViolationPanel(String rol) {
         super(new ViolationService(), new String[]{
             "Code", "Type", "Date", "Location", "Description", "Points Deducted", "Paid", "License Code"
         });
@@ -45,6 +36,8 @@ public class ViolationPanel extends AbstractEntityPanel<Violation> {
             typeFilterCombo.setSelectedIndex(0);
             paidFilterCombo.setSelectedIndex(0);
             locationFilterField.setText("");
+            
+           
             refreshTable();
         });
 
@@ -80,6 +73,33 @@ public class ViolationPanel extends AbstractEntityPanel<Violation> {
 
         add(unifiedPanel, BorderLayout.NORTH);
 
+        
+        if(rol.equalsIgnoreCase("admin")) {
+        	hideDelete();
+			hideEdit();
+			btnAdd.setEnabled(false);
+			btnAdd.setVisible(false);
+		
+			
+		} else
+		 if(rol.equalsIgnoreCase("examiner")) {
+			 hideDelete();
+				hideEdit();
+				btnAdd.setEnabled(false);
+				btnAdd.setVisible(false);
+			
+		}
+		else if (rol.equalsIgnoreCase("manager")) {
+			
+		}
+		else if (rol.equalsIgnoreCase("supervisor")) {
+			hideDelete();
+			hideEdit();
+			btnAdd.setEnabled(false);
+			btnAdd.setVisible(false);
+			
+		}
+        
         refreshTable();
     }
 
@@ -213,6 +233,7 @@ public class ViolationPanel extends AbstractEntityPanel<Violation> {
 
     @Override
     protected JButton createAddButton() {
-        return new NewViolationButton(null, this::refreshTable);
+    	btnAdd= new NewViolationButton(null, this::refreshTable);
+        return btnAdd;
     }
 }

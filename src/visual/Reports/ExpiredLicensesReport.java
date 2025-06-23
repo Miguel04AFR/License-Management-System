@@ -1,28 +1,18 @@
 package visual.Reports;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import javax.swing.*;
+
+import java.awt.*;
 import java.sql.Date;
-import java.util.ArrayList;
+
 import java.util.List;
-
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-
-import model.Driver;
+import java.util.ArrayList;
 import model.License;
-import services.DriverService;
+import model.Driver;
 import services.LicenseService;
-
+import services.DriverService;
+import static report_models.ExpiredLicensesReportModel.saveExpiredLicensesReport;
+import static report_models.SaveLocation.askSaveLocation;
 
 /**
  * Report: Drivers with Expired Licenses in a Period.
@@ -97,9 +87,20 @@ public class ExpiredLicensesReport extends JPanel {
 
         dialog.add(tablePanel, BorderLayout.CENTER);
 
-        // Export button (disabled for now)
+
         JButton exportButton = new JButton("Export...");
-        exportButton.setEnabled(false); // no action yet
+        exportButton.setEnabled(true);
+        exportButton.addActionListener(e -> {
+            try {
+                String filePath = askSaveLocation(dialog);
+                if (filePath != null&&!filePath.trim().isEmpty()) {
+                    saveExpiredLicensesReport(filePath, columns, rows);
+                    JOptionPane.showMessageDialog(dialog, "Report exported successfully!", "Export PDF", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error generating report: " + ex.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(exportButton);
 

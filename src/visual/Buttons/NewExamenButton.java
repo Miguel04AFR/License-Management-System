@@ -116,8 +116,8 @@ public class NewExamenButton extends AbstractAddButton {
                         }
                     }
                     // Otros errores
-                    if (msg == null || msg.isEmpty()) msg = "Error inesperado al guardar el examen.";
-                    JOptionPane.showMessageDialog(dialog, msg, "Error al guardar", JOptionPane.ERROR_MESSAGE);
+                    if (msg == null || msg.isEmpty()) msg = "Error .";
+                    JOptionPane.showMessageDialog(dialog, msg, "Error", JOptionPane.ERROR_MESSAGE);
                     // NO cerrar el dialog, así el usuario puede corregir!
                 }
             }
@@ -161,79 +161,68 @@ public class NewExamenButton extends AbstractAddButton {
         // Examiner Name
         errors.addAll(Validation.validateRequired(txtExaminerName.getText(), "Examiner Name"));
         errors.addAll(Validation.validateLength(txtExaminerName.getText(), 2, 50, "Examiner Name"));
-
+//041228168
         // Entity Code
         errors.addAll(Validation.validateRequired(txtEntityCode.getText(), "Entity Code"));
 
         // Driver ID
         errors.addAll(Validation.validateRequired(txtDriverId.getText(), "Driver ID"));
-
+        ExamService examService = new ExamService();
+        String examType = (String) cmbExamType.getSelectedItem();
+        String driverId = txtDriverId.getText();
+        String vehicleCategory = (String) cmbVehicleCategory.getSelectedItem();
+        
+        if (examType.equals("Theory")) {
+            if (!examService.hasApprovedMedicalExamForCategory(driverId, vehicleCategory)) {
+                errors.add("The driver must have an approved medical exam before the theoretical exam in this category.");
+            }
+        }
+        
+        if (examType.equals("Practical")) {
+            if (!examService.hasApprovedTheoryExamForCategory(driverId, vehicleCategory)) {
+                errors.add("The driver must have an approved theoretical exam before the practical exam in this category.");
+            }
+            if (!examService.hasApprovedMedicalExamForCategory(driverId, vehicleCategory)) {
+                errors.add("The driver must have an approved medical exam before the practical exam in this category.");
+            }
+        }
+        
+        if (examService.isDuplicateExamTypeAndCategory(driverId, examType, vehicleCategory)) {
+            errors.add("The driver already has a registered exam of this type and category.");
+        }
+        if (!examService.existsEntityCode(txtEntityCode.getText())) {
+            errors.add("The entity code does not exist. Please verify.");
+        }
+        if (!examService.existsDriverId(driverId)) {
+            errors.add("The driver ID does not exist. Please verify.");
+        }
+        if (!examService.isEntityEligibleForExamType(txtEntityCode.getText(), examType)) {
+            errors.add("The entity is not eligible to administer this type of exam.");
+        }
         return Validation.showErrors(parentFrame, errors);
     }
 
-
     @Override
     protected void saveToDatabase() {
-        boolean success = false; // Variable para rastrear si el guardado fue exitoso
-        try {
-            // Crear un nuevo objeto Exam con los datos del formulario
-            Exam exam = new Exam();
-            exam.setExamCode(txtExamCode.getText().trim());
-            exam.setExamType((String) cmbExamType.getSelectedItem());
-            exam.setExamDate(new Date(datePicker.getDate().getTime()));
-            exam.setResult((String) cmbResult.getSelectedItem());
-            exam.setVehicleCategory((String) cmbVehicleCategory.getSelectedItem());
-            exam.setExaminerName(txtExaminerName.getText().trim());
-            exam.setEntityCode(txtEntityCode.getText().trim());
-            exam.setDriverId(txtDriverId.getText().trim());
-    
-            // Llamar al servicio para guardar el examen
-            boolean ok = new ExamService().create(exam);
-    
-            if (ok) {
-                JOptionPane.showMessageDialog(parentFrame, "Exam successfully registered.");
-                success = true; // Guardado exitoso
-            } else {
-                JOptionPane.showMessageDialog(parentFrame, "Error registering exam.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-    
-        } catch (RuntimeException e) {
-            // Manejar errores específicos de la base de datos
-            Throwable cause = e.getCause();
-            if (cause instanceof java.sql.SQLException) {
-                java.sql.SQLException sqlEx = (java.sql.SQLException) cause;
-    
-                // Manejar violación de clave foránea (código SQLState 23503 en PostgreSQL)
-                if ("23503".equals(sqlEx.getSQLState())) {
-                    JOptionPane.showMessageDialog(parentFrame,
-                        "The associated entity code or driver ID does not exist. Please verify.",
-                        "Foreign Key Violation",
-                        JOptionPane.ERROR_MESSAGE);
-                    return; // No cerrar el formulario
-                }
-    
-                // Manejar violación de clave primaria (código SQLState 23505 en PostgreSQL)
-                if ("23505".equals(sqlEx.getSQLState())) {
-                    JOptionPane.showMessageDialog(parentFrame,
-                        "An exam with the same code already exists. Please use a different code.",
-                        "Duplicate Key Error",
-                        JOptionPane.ERROR_MESSAGE);
-                    return; // No cerrar el formulario
-                }
-            }
-    
-            // Otros errores inesperados
-            JOptionPane.showMessageDialog(parentFrame,
-                "An unexpected error occurred: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-        }
-    
-        // Cerrar la ventana solo si el guardado fue exitoso
-        if (success) {
-            parentFrame.dispose();
+        Exam exam = new Exam();
+        exam.setExamCode(txtExamCode.getText().trim());
+        exam.setExamType((String) cmbExamType.getSelectedItem());
+        exam.setExamDate(new Date(datePicker.getDate().getTime()));
+        exam.setResult((String) cmbResult.getSelectedItem());
+        exam.setVehicleCategory((String) cmbVehicleCategory.getSelectedItem()); // NEW FIELD
+        exam.setExaminerName(txtExaminerName.getText().trim());
+        exam.setEntityCode(txtEntityCode.getText().trim());
+        exam.setDriverId(txtDriverId.getText().trim());
+
+        boolean ok = new ExamService().create(exam);
+
+        if (ok) {
+            JOptionPane.showMessageDialog(parentFrame, "Exam successfully registered.");
+        } else {
+            JOptionPane.showMessageDialog(parentFrame, "Error registering exam.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     private void addFormField(JPanel panel, String label, JComponent field) {
         panel.add(new JLabel(label));
         panel.add(field);

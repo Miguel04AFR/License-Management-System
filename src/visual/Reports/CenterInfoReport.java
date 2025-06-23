@@ -1,34 +1,14 @@
 package visual.Reports;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
-
 import model.Center;
 import services.CenterService;
+
+import static report_models.CenterInfoReportModel.saveCenterToPdf;
+import static report_models.SaveLocation.askSaveLocation;
 
 /**
  * Report: Center Information Sheet.
@@ -78,7 +58,7 @@ public class CenterInfoReport extends JPanel {
 
         byte[] logoBytes = center.getLogo();
         if (logoBytes != null && logoBytes.length > 0) {
-             try {
+            try {
                 ImageIcon icon = new ImageIcon(logoBytes);
                 // Optionally scale
                 Image img = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
@@ -101,7 +81,21 @@ public class CenterInfoReport extends JPanel {
 
         // Export button (disabled for now)
         JButton exportButton = new JButton("Export...");
-        exportButton.setEnabled(false); // no action yet
+        exportButton.setEnabled(true); // no action yet
+        exportButton.addActionListener(e -> {
+            try {
+                String filePath = askSaveLocation(dialog);
+                if (filePath != null) {
+                    saveCenterToPdf(center, filePath);
+                    JOptionPane.showMessageDialog(dialog, "Reporte guardado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "No se seleccionó una ubicación válida.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Ocurrió un error al guardar el reporte: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(exportButton);
 
@@ -109,7 +103,10 @@ public class CenterInfoReport extends JPanel {
         dialog.pack();
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
+
+
     }
+
 
     private static void addRow(JPanel panel, String label, String value, GridBagConstraints gbc, int y) {
         gbc.gridx = 0; gbc.gridy = y; gbc.weightx = 0;
@@ -117,4 +114,5 @@ public class CenterInfoReport extends JPanel {
         gbc.gridx = 1; gbc.weightx = 1;
         panel.add(new JLabel(value), gbc);
     }
+
 }

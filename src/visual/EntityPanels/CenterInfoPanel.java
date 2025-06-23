@@ -2,7 +2,6 @@ package visual.EntityPanels;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;

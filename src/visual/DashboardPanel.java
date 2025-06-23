@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -40,7 +41,6 @@ public class DashboardPanel extends JPanel {
     private final JLabel lblMedicalExams = new JLabel("0");
     private final JLabel lblTheoryExams = new JLabel("0");
     private final JLabel lblPracticalExams = new JLabel("0");
-    // NUEVOS LABELS PARA ALERTAS PERSONALIZADAS
     private final JLabel lblSoonToExpireLicenses = new JLabel("0");
     private final JLabel lblPendingMedicalExams = new JLabel("0");
 
@@ -48,10 +48,23 @@ public class DashboardPanel extends JPanel {
         setLayout(new BorderLayout(16, 16));
         setOpaque(true);
 
-        JLabel title = new JLabel("System Dashboard", SwingConstants.LEFT);
-        title.setFont(title.getFont().deriveFont(Font.BOLD, 26f));
-        title.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        add(title, BorderLayout.NORTH);
+        // Header con título y botón Refresh
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        
+JLabel title = new JLabel("System Dashboard", SwingConstants.LEFT);
+title.setFont(title.getFont().deriveFont(Font.BOLD, 26f));
+headerPanel.add(title, BorderLayout.WEST);
+
+JButton btnRefresh = new JButton("🔄");
+btnRefresh.setToolTipText("Actualizar los datos del panel");
+btnRefresh.setFocusable(false);
+btnRefresh.setFont(btnRefresh.getFont().deriveFont(Font.PLAIN, 20f));
+btnRefresh.addActionListener(e -> refreshData());
+
+headerPanel.add(btnRefresh, BorderLayout.EAST);
+add(headerPanel, BorderLayout.NORTH);
 
         JPanel mainGrid = new JPanel(new GridLayout(2, 3, 16, 16));
         mainGrid.setOpaque(false);
@@ -97,7 +110,6 @@ public class DashboardPanel extends JPanel {
         setMedicalExams(examService.countMedicalExams());
         setTheoryExams(examService.countTheoryExams());
         setPracticalExams(examService.countPracticalExams());
-        
         setPendingMedicalExams(examService.countDriversWithoutMedicalExam());
         setSoonToExpireLicenses(licenseService.countSoonToExpireLicenses());
     }
@@ -142,15 +154,14 @@ public class DashboardPanel extends JPanel {
         if (textColor != null) label.setForeground(textColor);
 
         valueLabel.setFont(valueLabel.getFont().deriveFont(Font.BOLD, 18f));
-        if (textColor != null) valueLabel.setForeground(textColor);
-        else valueLabel.setForeground(UIManager.getColor("Label.foreground"));
+        valueLabel.setForeground(textColor != null ? textColor : UIManager.getColor("Label.foreground"));
 
         row.add(label);
         row.add(valueLabel);
         return row;
     }
 
-    // Setters públicos igual que antes
+    // Setters públicos
     public void setTotalDrivers(int value) { lblTotalDrivers.setText(String.valueOf(value)); }
     public void setTotalLicenses(int value) { lblTotalLicenses.setText(String.valueOf(value)); }
     public void setActiveLicenses(int value) { lblActiveLicenses.setText(String.valueOf(value)); }
@@ -165,7 +176,6 @@ public class DashboardPanel extends JPanel {
     public void setMedicalExams(int value) { lblMedicalExams.setText(String.valueOf(value)); }
     public void setTheoryExams(int value) { lblTheoryExams.setText(String.valueOf(value)); }
     public void setPracticalExams(int value) { lblPracticalExams.setText(String.valueOf(value)); }
-    // NUEVOS SETTERS
     public void setSoonToExpireLicenses(int value) { lblSoonToExpireLicenses.setText(String.valueOf(value)); }
     public void setPendingMedicalExams(int value) { lblPendingMedicalExams.setText(String.valueOf(value)); }
 }

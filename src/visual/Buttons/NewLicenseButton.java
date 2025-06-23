@@ -1,32 +1,15 @@
 package visual.Buttons;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.sql.Date;
-import java.util.ArrayList;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-
-import org.jdesktop.swingx.JXDatePicker;
-
 import model.License;
 import services.LicenseService;
 import utils.Validation;
+
+import org.jdesktop.swingx.JXDatePicker;
+
+import javax.swing.*;
+import java.awt.*;
+import java.sql.Date;
+import java.util.ArrayList;
 
 public class NewLicenseButton extends AbstractAddButton {
     private static final long serialVersionUID = 1L;

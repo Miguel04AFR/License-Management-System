@@ -1,25 +1,15 @@
 package visual.EntityPanels;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.sql.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-
-import org.jdesktop.swingx.JXDatePicker;
-
 import model.Exam;
 import services.ExamService;
 import visual.Buttons.NewExamenButton;
+
+import javax.swing.*;
+import org.jdesktop.swingx.JXDatePicker;
+import java.awt.*;
+import java.sql.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExamPanel extends AbstractEntityPanel<Exam> {
     private static final long serialVersionUID = 1L;
@@ -30,7 +20,8 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
     private JButton filterButton;
     private JButton clearFilterButton;
 
-    public ExamPanel() {
+    public ExamPanel(String rol) {
+    	
         super(new ExamService(), new String[]{
                 "Code", "Type", "Date", "Result", "Vehicle Category", "Examiner", "Entity", "Driver ID"
         });
@@ -88,8 +79,34 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
 
         // Put the unified panel at the top
         add(unifiedPanel, BorderLayout.NORTH);
-
+        
+        if(rol.equalsIgnoreCase("admin")){
+        	hideDelete();
+			hideEdit();
+			btnAdd.setVisible(false);
+			btnAdd.setEnabled(false);
+			
+        }else
+        if(rol.equalsIgnoreCase("examiner")) {
+			
+		}
+		else if (rol.equalsIgnoreCase("manager")) {
+			hideDelete();
+			hideEdit();
+			btnAdd.setVisible(false);
+			btnAdd.setEnabled(false);
+		
+		}
+		else if (rol.equalsIgnoreCase("supervisor")) {
+			btnAdd.setVisible(false);
+			btnAdd.setEnabled(false);
+			hideDelete();
+			hideEdit();
+			
+		}
+        
         refreshTable();
+        r = rol; // Store the role for later use
     }
 
     private List<Exam> applyFilters(List<Exam> exams) {
@@ -233,6 +250,7 @@ public class ExamPanel extends AbstractEntityPanel<Exam> {
 
     @Override
     protected JButton createAddButton() {
-        return new NewExamenButton(null, this::refreshTable);
+    	btnAdd= new NewExamenButton(null, this::refreshTable);
+        return btnAdd;
     }
 }
